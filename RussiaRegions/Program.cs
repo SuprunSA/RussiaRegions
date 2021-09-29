@@ -24,13 +24,10 @@ namespace RussiaRegions
                 decimal square = ReadSubjectSquare();
                 string districtName = ReadSubjectFederalDistrictName();
 
-                PrintSubject(code,name, adminDistrict, population, square, districtName);
+                PrintSubject(code, name, adminDistrict, population, square, districtName);
 
                 WriteLine("Нажмите Esc, чтобы выйти или любую другую клавишу, чтобы продолжить добавлять субъекты");
             } while (ReadKey().Key != ConsoleKey.Escape);
-
-            WriteLine("*****************************");
-
         }
 
         static void PrintSubject(string code, string name, string adminDistrict, decimal population, decimal square, string districtName)
