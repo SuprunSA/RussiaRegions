@@ -1,18 +1,9 @@
 ﻿using System;
 using static System.Console;
-using System.Collections.Generic;
 
-namespace RussiaRegions
+public class methods
 {
-    class Program
-    {
-        static Dictionary<string, string> DistrictNames = new Dictionary<string, string>();
-
-        static void Main(string[] args)
-        {
-            AddSubject();
-        }
-        static void AddSubject()
+    static void AddSubject()
         {
             do
             {
@@ -31,19 +22,10 @@ namespace RussiaRegions
 
         static void PrintSubject(string code, string name, string adminDistrict, decimal population, decimal square, string districtName)
         {
-            string codeDist = "";
             WriteLine("\t Код: {0}. \t Наименование: {1}.", code, name);
             WriteLine("Административный центр: {0}.", adminDistrict);
             WriteLine("Население: {0}. \t Площадь: {1}.", population, square);
-            foreach (string code_district in DistrictNames.Keys)
-            {
-                if (DistrictNames[code_district] == districtName)
-                {
-                    codeDist = code_district;
-                    break;
-                }
-            }
-            WriteLine("Федеральный округ: {0}. \t Код федерального округа: {1}", districtName, codeDist);
+            WriteLine("Федеральный округ: {0}.", districtName);
         }
 
         static string ReadSubjectCode()
@@ -108,12 +90,12 @@ namespace RussiaRegions
             {
                 return districtName;
             }
-            else
+            else 
             {
                 AddDistrictCode(districtName);
                 return districtName;
             }
-
+            
         }
 
         static void AddDistrictCode(string districtName)
@@ -129,5 +111,4 @@ namespace RussiaRegions
             }
             DistrictNames.Add(code, districtName);
         }
-    }
 }
