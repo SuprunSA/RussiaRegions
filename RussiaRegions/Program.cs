@@ -14,14 +14,15 @@ namespace RussiaRegions
         }
         static void AddSubject()
         {
+            string districtName = ReadFederalDistrictName();
             do
             {
                 string code = ReadSubjectCode();
                 string name = ReadSubjectName();
                 string adminDistrict = ReadAdminDistrict();
-                decimal population = ReadSubjectPopulationSize();
-                decimal square = ReadSubjectSquare();
-                string districtName = ReadSubjectFederalDistrictName();
+                double population = ReadSubjectPopulationSize();
+                double square = ReadSubjectSquare();
+                
 
                 PrintSubject(code, name, adminDistrict, population, square, districtName);
 
@@ -29,12 +30,12 @@ namespace RussiaRegions
             } while (ReadKey().Key != ConsoleKey.Escape);
         }
 
-        static void PrintSubject(string code, string name, string adminDistrict, decimal population, decimal square, string districtName)
+        static void PrintSubject(string code, string name, string adminDistrict, double population, double square, string districtName)
         {
             string codeDist = "";
             WriteLine("\t Код: {0}. \t Наименование: {1}.", code, name);
             WriteLine("Административный центр: {0}.", adminDistrict);
-            WriteLine("Население: {0}. \t Площадь: {1}.", population, square);
+            WriteLine("Население, тыс. чел.: {0}. \t Площадь, кв. м.: {1}.", population, square);
             foreach (string code_district in DistrictNames.Keys)
             {
                 if (DistrictNames[code_district] == districtName)
@@ -75,11 +76,11 @@ namespace RussiaRegions
             return adminDistrict;
         }
 
-        static decimal ReadSubjectPopulationSize()
+        static double ReadSubjectPopulationSize()
         {
-            decimal population;
+            double population;
             Write("Введите численность населения: ");
-            while (!decimal.TryParse(ReadLine(), out population) || population < 0 || Math.Round(population, 3) != population)
+            while (!double.TryParse(ReadLine(), out population) || population < 0 || Math.Round(population, 3) != population)
             {
                 Error.WriteLine("Численность населения - положительное число.");
                 Write("Введите численность населения: ");
@@ -87,11 +88,11 @@ namespace RussiaRegions
             return population;
         }
 
-        static decimal ReadSubjectSquare()
+        static double ReadSubjectSquare()
         {
-            decimal square;
+            double square;
             Write("Введите площадь субъекта: ");
-            while (!decimal.TryParse(ReadLine(), out square) || square < 0 || Math.Round(square, 2) != square)
+            while (!double.TryParse(ReadLine(), out square) || square < 0)
             {
                 Error.WriteLine("Площадь субъекта - положительное число.");
                 Write("Введите площадь cубъекта: ");
@@ -99,7 +100,7 @@ namespace RussiaRegions
             return square;
         }
 
-        static string ReadSubjectFederalDistrictName()
+        static string ReadFederalDistrictName()
         {
             Write("Введите название федерального округа: ");
             string districtName;
