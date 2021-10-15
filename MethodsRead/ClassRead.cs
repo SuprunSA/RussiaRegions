@@ -41,7 +41,8 @@ namespace MethodsRead
 
         static string ReadSubjectCode()
         {
-            Write("\n Введите код ОКАТО: ");
+            WriteLine();
+            Write("Введите код ОКАТО >>> ");
             string code = ReadLine();
             while (!ulong.TryParse(code, out _))
             {

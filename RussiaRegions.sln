@@ -5,10 +5,6 @@ VisualStudioVersion = 16.0.31624.102
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RussiaRegions", "RussiaRegions\RussiaRegions.csproj", "{278A0178-8E68-4C15-9BF0-B023333767F9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MethodsRead", "MethodsRead\MethodsRead.csproj", "{313E0C07-1FE7-4B2C-A3D4-A702E5C8C765}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MethodsPrint", "MethodsPrint\MethodsPrint.csproj", "{B2EBA875-2C20-4AC0-A870-9D7437CE2CF7}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,14 +15,6 @@ Global
 		{278A0178-8E68-4C15-9BF0-B023333767F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{278A0178-8E68-4C15-9BF0-B023333767F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{278A0178-8E68-4C15-9BF0-B023333767F9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{313E0C07-1FE7-4B2C-A3D4-A702E5C8C765}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{313E0C07-1FE7-4B2C-A3D4-A702E5C8C765}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{313E0C07-1FE7-4B2C-A3D4-A702E5C8C765}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{313E0C07-1FE7-4B2C-A3D4-A702E5C8C765}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B2EBA875-2C20-4AC0-A870-9D7437CE2CF7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B2EBA875-2C20-4AC0-A870-9D7437CE2CF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B2EBA875-2C20-4AC0-A870-9D7437CE2CF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B2EBA875-2C20-4AC0-A870-9D7437CE2CF7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
