@@ -2,35 +2,24 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace RussiaRegions
+namespace DistrictsNSubjects
 {
     public class Subject
     {
-        public uint Code { get; }
+        public ulong Code { get; }
         public string SubjectName { get; set; }
         public string AdminCenterName { get; set; }
         public float Population { get; set; }
         public float Square { get; set; }
-        public float PopulationDencity { get => Population / Square;  set => Math.Round(value, 3); }
+        public float PopulationDencity { get => Population / Square; set => Math.Round(value, 3); }
         public FederalDistrict FederalDistrict { get; set; }
 
-        public Subject(uint code, string subjectName, FederalDistrict federalDistrict)
+        public Subject(ulong code, string subjectName, FederalDistrict federalDistrict)
         {
             Code = code;
             SubjectName = subjectName;
             FederalDistrict = federalDistrict;
         }
-
-        public Subject(uint code, string subjectName, string adminCenterName, float population, float square, FederalDistrict federalDistrict)
-        {
-            Code = code;
-            SubjectName = subjectName;
-            AdminCenterName = adminCenterName;
-            Population = population;
-            Square = square;
-            PopulationDencity = population / square;
-            FederalDistrict = federalDistrict;
-        } // конструктор для создания Mock списка 23 - 29 в Program
 
         public override string ToString()
         {
