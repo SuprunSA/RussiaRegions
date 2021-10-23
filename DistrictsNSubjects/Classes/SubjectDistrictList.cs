@@ -47,6 +47,24 @@ namespace DistrictsNSubjects
             Subjects.Remove(subject);
         }
 
+        public void RemoveSubject(string subjectName)
+        {
+            var contain = false;
+            foreach (var subject in Subjects)
+            {
+                if (subjectName == subject.Name)
+                {
+                    RemoveSubject(subject);
+                    contain = true;
+                    break;
+                }
+            }
+            if (!contain)
+            {
+                Console.WriteLine("Такого субъекта нет.");
+            }
+        }
+
         public void AddDistrict(FederalDistrict federalDistrict)
         {
             Districts.Add(federalDistrict);
@@ -54,7 +72,55 @@ namespace DistrictsNSubjects
 
         public void RemoveDistrict(FederalDistrict federalDistrict)
         {
-            RemoveDistrict(federalDistrict);
+            Districts.Remove((federalDistrict));
+        }
+
+        public void RemoveDistrict(string districtName)
+        {
+            var contain = false;
+            var count = CountDistrictSubjects(districtName);
+            foreach (var district in Districts)
+            {
+                if (districtName == district.Name)
+                {
+                    for (int i = 0; i < count; i++)
+                    {
+                        RemoveDistrictSubject(districtName);
+                    }
+                    RemoveDistrict(district);
+                    contain = true;
+                    break;
+                }
+            }
+            if (!contain)
+            {
+                Console.WriteLine("Такого округа нет.");
+            }
+        }
+
+        public int CountDistrictSubjects(string federalDistrictName)
+        {
+            var count = 0;
+            foreach (var subject in Subjects)
+            {
+                if (subject.FederalDistrict.Name == federalDistrictName)
+                {
+                    count++;
+                }
+            }
+            return count;
+        }
+
+        public void RemoveDistrictSubject(string federalDistrictName)
+        {
+            foreach (var subject in Subjects)
+            {
+                if (subject.FederalDistrict.Name == federalDistrictName)
+                {
+                    RemoveSubject(subject);
+                    break;
+                }
+            }
         }
     }
 }

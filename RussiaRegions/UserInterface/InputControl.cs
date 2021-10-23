@@ -73,11 +73,11 @@ namespace RussiaRegions
             return federalDistrict;
         }
 
-        public uint ReadFederalDistrictCode()
+        public ulong ReadFederalDistrictCode()
         {
-            uint code;
+            ulong code;
             Console.WriteLine("Введите код федерального округа: ");
-            while (!uint.TryParse(Console.ReadLine().Trim(), out code))
+            while (!ulong.TryParse(Console.ReadLine().Trim(), out code))
             {
                 Console.Error.WriteLine("Код - положительное целое число.");
                 Console.WriteLine("Введите код федерального округа: ");
@@ -122,6 +122,24 @@ namespace RussiaRegions
                 Console.WriteLine("Плотность населения: {0} тыс. чел. / кв. м.", subjectDistrictList.CountDistrictPopulationDensity(subjectDistrictList.Subjects, district.Name));
                 Console.WriteLine();
             }
+        }
+
+        public void ReadSubjectNameToRemove(SubjectDistrictList subjectDistrictList)
+        {
+            Console.WriteLine("Введите название региона, который хотите удалить: ");
+            subjectDistrictList.RemoveSubject(Console.ReadLine().Trim());
+        }
+
+        public void ReadDistrictNameToRemove(SubjectDistrictList subjectDistrictList)
+        {
+            Console.WriteLine("Введите название округа, который хотите удалить(вместе с ним удалятся все его субъекты!): ");
+            subjectDistrictList.RemoveDistrict(Console.ReadLine().Trim());
+        }
+
+        public void Wait()
+        {
+            Console.WriteLine("Нажмите любую клавишу чтобы продолжить...");
+            Console.ReadKey();
         }
     }
 }

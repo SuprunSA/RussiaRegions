@@ -7,7 +7,7 @@ namespace DistrictsNSubjects
     public class Subject
     {
         public ulong Code { get; }
-        public string SubjectName { get; set; }
+        public string Name { get; set; }
         public string AdminCenterName { get; set; }
         public float Population { get; set; }
         public float Square { get; set; }
@@ -17,14 +17,14 @@ namespace DistrictsNSubjects
         public Subject(ulong code, string subjectName, FederalDistrict federalDistrict)
         {
             Code = code;
-            SubjectName = subjectName;
+            Name = subjectName;
             FederalDistrict = federalDistrict;
         }
 
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append(string.Format("Название: {0}\n", SubjectName));
+            sb.Append(string.Format("Название: {0}\n", Name));
             sb.Append(string.Format("Код: {0}\n", Code));
             sb.Append(string.Format("Административный центр: {0}\n", AdminCenterName));
             sb.Append(string.Format("Население: {0:# ##0.000} тыс. чел.\n", Population));

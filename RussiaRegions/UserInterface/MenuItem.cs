@@ -17,10 +17,10 @@ namespace RussiaRegions
 
         public void Print()
         {
-            Console.ForegroundColor = ConsoleColor.Red;
+            Console.ForegroundColor = ConsoleColor.White;
             Console.Write(Key);
             Console.Write(" ");
-            Console.ForegroundColor = ConsoleColor.Green;
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
             Console.Write(Label);
         }
     }
