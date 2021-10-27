@@ -41,7 +41,6 @@ namespace RussiaRegions
                 return subjects.ToList();
             }
         }
-
         Table<Subject> subjectTable = new Table<Subject>(new[]
         {
             new TableColumn<Subject>("Название", 20, subject => subject.Name),
@@ -85,7 +84,6 @@ namespace RussiaRegions
                 return districts.ToList();
             }
         }
-
         Table<FederalDistrict> districtTable = new Table<FederalDistrict>(new[]
                 {
                     new TableColumn<FederalDistrict>("Название", 30, district => string.Format("{0} федеральный округ", district.Name)),
@@ -94,6 +92,7 @@ namespace RussiaRegions
 
                     new TableColumn<FederalDistrict>("Плотность населения", 23, district => district.PopulationDencity.ToString())
                 });
+
         public SubjectDistrictList(List<Subject> subjects, List<FederalDistrict> federalDistricts)
         {
             subjects = Subjects;
@@ -245,6 +244,7 @@ namespace RussiaRegions
         {
             Districts.Remove(federalDistrict);
             Subjects.RemoveAll(s => s.FederalDistrict.Code == federalDistrict.Code);
+            SelectDistrict.SelectedNodeIndex--;
         }
 
         public void CountPopulationDensity()
