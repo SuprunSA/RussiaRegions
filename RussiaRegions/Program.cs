@@ -19,8 +19,8 @@ namespace RussiaRegions
             };
             subjectDistrictList2 = new SubjectDistrictList(MockSND.MockDistricts.ToList())
             {
-                Subjects = MockSND.MockSubjects(MockSND.MockDistricts).ToList(),
-                Districts = MockSND.MockDistricts.ToList()
+                Subjects = subjectDistrictList1.Subjects,
+                Districts = subjectDistrictList1.Districts
             };
         }
 

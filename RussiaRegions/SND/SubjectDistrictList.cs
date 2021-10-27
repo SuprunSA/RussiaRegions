@@ -188,6 +188,11 @@ namespace RussiaRegions
         public void RemoveSubject(Subject subject)
         {
             Console.Clear();
+            var subjects = Subjects.Where(s => s.FederalDistrict.Name == subject.FederalDistrict.Name);
+            if (subjects.Count() == 1)
+            {
+                Districts.RemoveAll(d => d.Name == subject.FederalDistrict.Name);
+            } 
             Subjects.Remove(subject);
             SelectSubject.SelectedNodeIndex--;
         }
@@ -305,9 +310,9 @@ namespace RussiaRegions
             InputControl inputControl = new InputControl();
             SelectDistrict = new ListSelector<FederalDistrict>(() => OrderedDistricts);
             DistrictMenu = new Menu(new List<MenuItem>(SelectDistrict.Menu.Items) {
-                new MenuAction(ConsoleKey.F1, "Удаление округа", () => RemoveDistrict(SelectedDistrict)),
+                new MenuAction(ConsoleKey.F1, "Изменение округа", ChangeDistrict),
 
-                new MenuAction(ConsoleKey.F2, "Изменение округа", ChangeDistrict),
+                new MenuAction(ConsoleKey.F2, "Удаление округа", () => RemoveDistrict(SelectedDistrict)),
 
                 new MenuAction(ConsoleKey.F3, "Сортировать по плотности населения", PopulationDencitySort),
 
@@ -346,6 +351,8 @@ namespace RussiaRegions
         public void RemoveDistrict(FederalDistrict federalDistrict)
         {
             Districts.Remove(federalDistrict);
+            Subjects.RemoveAll(s => s.FederalDistrict.Name == federalDistrict.Name);
+            SelectDistrict.SelectedNodeIndex--;
         }
 
         public void ChangeDistrict()
