@@ -73,6 +73,12 @@ namespace RussiaRegions
             return federalDistrict;
         }
 
+        public string ReadFederalDistrictNameToSTH()
+        {
+            Console.WriteLine("Введите название федерального округа: ");
+            return Console.ReadLine().Trim();
+        }
+
         public uint ReadFederalDistrictCode()
         {
             uint code;

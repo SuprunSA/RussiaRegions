@@ -8,11 +8,6 @@ namespace RussiaRegions
 {
     class SubjectDistrictList
     {
-        public SubjectDistrictList(IEnumerable<Subject> subjects, IEnumerable<FederalDistrict> federalDistricts)
-        {
-            Subjects = subjects.ToList();
-            Districts = federalDistricts.ToList();
-        }
         public List<Subject> Subjects = new List<Subject>();
         readonly Menu SubjectSortDescMenu;
         readonly Menu SubjectSortMenu;
@@ -55,17 +50,51 @@ namespace RussiaRegions
 
             new TableColumn<Subject>("Административный центр", 23, subject => subject.AdminCenterName),
 
-            new TableColumn<Subject>("Население", 20, subject => string.Format("{0:# ##0.000} тыс.чел.", subject.Population)),
+            new TableColumn<Subject>("Население", 25, subject => string.Format("{0:# ##0.000} тыс.чел.", subject.Population)),
 
             new TableColumn<Subject>("Площадь", 20, subject => string.Format("{0:# ##0.00} кв. м.", subject.Square)),
 
             new TableColumn<Subject>("Плотность населения", 23, subject => string.Format("{0:# ##0.000} тыс. чел. / кв. м.", subject.PopulationDencity)),
 
-            new TableColumn<Subject>("Федеральный округ", 15, subject => subject.FederalDistrict.Name)
+            new TableColumn<Subject>("Название округа", 17, subject => subject.FederalDistrict.Name),
+
+            new TableColumn<Subject>("Код округа", 12, subject => subject.FederalDistrict.Code.ToString())
         });
 
-        #region Subjects
-        public SubjectDistrictList(List<Subject> subjects)
+        public List<FederalDistrict> Districts = new List<FederalDistrict>();
+        public Menu DistrictMenu;
+        readonly Menu DistrictDescMenu;
+        readonly Menu DistrictChangeMenu;
+        public ListSelector<FederalDistrict> SelectDistrict { get; }
+        public FederalDistrict SelectedDistrict => SelectDistrict.SelectedNode;
+        Func<FederalDistrict, object> DistrictOrderBy = district => district.PopulationDencity;
+        public bool DistrictOrderByDescending = false;
+        IList<FederalDistrict> OrderedDistricts
+        {
+            get
+            {
+                var districts = Districts;
+                if (!DistrictOrderByDescending)
+                {
+                    districts = districts.OrderBy(DistrictOrderBy).ToList();
+                }
+                else
+                {
+                    districts = districts.OrderByDescending(DistrictOrderBy).ToList();
+                }
+                return districts.ToList();
+            }
+        }
+
+        Table<FederalDistrict> districtTable = new Table<FederalDistrict>(new[]
+                {
+                    new TableColumn<FederalDistrict>("Название", 30, district => string.Format("{0} федеральный округ", district.Name)),
+
+                    new TableColumn<FederalDistrict>("Код ОКЭР", 10, district => district.Code.ToString()),
+
+                    new TableColumn<FederalDistrict>("Плотность населения", 23, district => district.PopulationDencity.ToString())
+                });
+        public SubjectDistrictList(List<Subject> subjects, List<FederalDistrict> federalDistricts)
         {
             subjects = Subjects;
             InputControl inputControl = new InputControl();
@@ -115,10 +144,158 @@ namespace RussiaRegions
                     ChangeSquare(SelectedSubject, inputControl)),
 
                 new MenuAction(ConsoleKey.D5, "Изменить округ", () =>
-                    ChangeDistrict(SelectedSubject)),
+                    ChangeDistrict(SelectedSubject, inputControl)),
 
                 new MenuClose(ConsoleKey.Escape, "Выход")
             });
+
+            federalDistricts = Districts;
+            SelectDistrict = new ListSelector<FederalDistrict>(() => OrderedDistricts);
+            DistrictMenu = new Menu(new List<MenuItem>(SelectDistrict.Menu.Items) {
+                new MenuAction(ConsoleKey.F1, "Изменение округа", ChangeDistrict),
+
+                new MenuAction(ConsoleKey.F2, "Удаление округа", () => RemoveDistrict(SelectedDistrict)),
+
+                new MenuAction(ConsoleKey.F3, "Сортировать по плотности населения", PopulationDencitySort),
+
+                new MenuAction(ConsoleKey.F4, "Поиск по названию", () => SearchDistrictByName(inputControl)),
+
+                new MenuAction(ConsoleKey.F5, "Поиск по коду", () => SearchDistrictByCode(inputControl)),
+
+                new MenuClose(ConsoleKey.Tab, "Вернуться к субъектам")
+            });
+            DistrictDescMenu = new Menu(new List<MenuItem>()
+            {
+                new MenuAction(ConsoleKey.D1, "По возрастанию", () => DistrictOrderByDescending = false),
+                new MenuAction(ConsoleKey.D2, "По убыванию", () => DistrictOrderByDescending = true)
+            });
+            DistrictChangeMenu = new Menu(new List<MenuItem>()
+            {
+                new MenuAction(ConsoleKey.D1, "Изменить название", () => ChangeDistrictName(SelectedDistrict, inputControl)),
+
+                new MenuClose(ConsoleKey.Escape, "Выход")
+            });
+        }
+
+        #region Districts
+        public void SearchDistrictByCode(InputControl inputControl)
+        {
+            Console.Clear();
+            var code = inputControl.ReadFederalDistrictCode();
+            var district = Districts.Find(d => d.Code == code);
+            if (district == null)
+            {
+                Console.WriteLine("Округа с таким кодом не найдено");
+                Console.WriteLine("Нажмите любую клавишу, чтобы продолжить...");
+                Console.ReadKey();
+            }
+            else
+            {
+                SelectDistrict.SelectedNode = district;
+            }
+        }
+
+        public void SearchDistrictByName(InputControl inputControl)
+        {
+            Console.Clear();
+            var name = inputControl.ReadFederalDistrictNameToSTH();
+            var district = Districts.Find(d => d.Name == name);
+            if (district == null)
+            {
+                Console.WriteLine("Округа с таким названием не найдено");
+                Console.WriteLine("Нажмите любую клавишу, чтобы продолжить...");
+                Console.ReadKey();
+            }
+            else
+            {
+                SelectDistrict.SelectedNode = district;
+            }
+        }
+
+        public void PopulationDencitySort()
+        {
+            Console.Clear();
+            DistrictDescMenu.Print();
+            DistrictDescMenu.Action(Console.ReadKey().Key);
+        }
+
+        public void ChangeDistrict()
+        {
+            Console.Clear();
+            DistrictChangeMenu.Print();
+            districtTable.Print(OrderedDistricts, SelectedDistrict);
+            DistrictChangeMenu.Action(Console.ReadKey().Key);
+        }
+
+        public void ChangeDistrictName(FederalDistrict federalDistrict, InputControl inputControl)
+        {
+            Console.Clear();
+            var name = inputControl.ReadFederalDistrictNameToSTH();
+            foreach (var subject in Subjects)
+            {
+                if (subject.FederalDistrict.Code == federalDistrict.Code)
+                {
+                    subject.FederalDistrict.Name = name;
+                }
+            }
+            Districts.Find(d => d.Code == federalDistrict.Code).Name = name;
+        }
+
+        public void RemoveDistrict(FederalDistrict federalDistrict)
+        {
+            Districts.Remove(federalDistrict);
+            Subjects.RemoveAll(s => s.FederalDistrict.Code == federalDistrict.Code);
+        }
+
+        public void CountPopulationDensity()
+        {
+            foreach(var district in Districts)
+            {
+                var population = 0.0;
+                var square = 0.0;
+                foreach(var subject in Subjects)
+                {
+                    if (subject.FederalDistrict.Code == district.Code)
+                    {
+                        population += subject.Population;
+                        square += subject.Square;
+                    }
+                }
+                district.PopulationDencity = Math.Round(population / square, 3);
+            }
+        }
+
+        public void PrintAllDistricts()
+        {
+            CountPopulationDensity();
+            districtTable.Print(OrderedDistricts, SelectedDistrict);
+        }
+        #endregion
+
+        #region Subjects
+        public void ChangeDistrict(Subject subject, InputControl inputControl)
+        {
+            Console.Clear();
+            var name = inputControl.ReadFederalDistrictNameToSTH();
+            if (Subjects.Where(s => s.FederalDistrict.Code == subject.FederalDistrict.Code).Count() == 1)
+            {
+                RemoveDistrict(Districts.Find(d => d.Code == subject.FederalDistrict.Code));
+            }
+            if (Districts.Find(d => d.Name == name) != null)
+            {
+                Subjects.Find(s => s == subject).FederalDistrict = Districts.Find(d => d.Name == name);
+            }
+            else
+            {
+                var code = inputControl.ReadFederalDistrictCode();
+                subject.FederalDistrict = new FederalDistrict(code, name);
+                AddDistrict(subject.FederalDistrict);
+            }
+        }
+
+        public void AddDistrict(FederalDistrict federalDistrict)
+        {
+            Districts.Add(federalDistrict);
         }
 
         public void ChangeSubjectName(Subject subject, InputControl inputControl)
@@ -144,33 +321,6 @@ namespace RussiaRegions
             subject.Square = inputControl.ReadSubjectSquare();
         }
 
-        public void ChangeDistrict(Subject subject)
-        {
-            Console.Clear();
-            Console.WriteLine("Введите название округа");
-            var name = Console.ReadLine().Trim();
-            if (Subjects.Where(s => s.FederalDistrict.Name == subject.FederalDistrict.Name).Count() == 1)
-            {
-                RemoveDistrict(Districts.Find(d => d.Name == subject.FederalDistrict.Name));
-            }
-            if (Districts.Find(d => d.Name == name) != null)
-            {
-                subject.FederalDistrict = Districts.Find(d => d.Name == name);
-            }
-            else
-            {
-                uint code;
-                Console.WriteLine("Введите код округа: ");
-                while (!uint.TryParse(Console.ReadLine(), out code))
-                {
-                    Console.Error.WriteLine("Код округа - положительное целое число.");
-                    Console.WriteLine("Введите код округа: ");
-                }
-                subject.FederalDistrict = new FederalDistrict(code, name);
-                AddDistrict(subject.FederalDistrict);
-            }
-        }
-
         public void AddSubject(InputControl inputControl)
         {
             Console.Clear();
@@ -188,11 +338,11 @@ namespace RussiaRegions
         public void RemoveSubject(Subject subject)
         {
             Console.Clear();
-            var subjects = Subjects.Where(s => s.FederalDistrict.Name == subject.FederalDistrict.Name);
+            var subjects = Subjects.Where(s => s.FederalDistrict.Code == subject.FederalDistrict.Code);
             if (subjects.Count() == 1)
             {
-                Districts.RemoveAll(d => d.Name == subject.FederalDistrict.Name);
-            } 
+                Districts.RemoveAll(d => d.Code == subject.FederalDistrict.Code);
+            }
             Subjects.Remove(subject);
             SelectSubject.SelectedNodeIndex--;
         }
@@ -266,167 +416,6 @@ namespace RussiaRegions
         public void PrintAllSubjects()
         {
             subjectTable.Print(OrderedSubjects, SelectedSubject);
-        }
-        #endregion
-
-        public List<FederalDistrict> Districts = new List<FederalDistrict>();
-        public Menu DistrictMenu;
-        readonly Menu DistrictDescMenu;
-        readonly Menu DistrictChangeMenu;
-        public ListSelector<FederalDistrict> SelectDistrict { get; }
-        public FederalDistrict SelectedDistrict => SelectDistrict.SelectedNode;
-        Func<FederalDistrict, object> DistrictOrderBy = district => district.PopulationDencity;
-        public bool DistrictOrderByDescending = false;
-        IList<FederalDistrict> OrderedDistricts
-        {
-            get
-            {
-                var districts = Districts;
-                if (!DistrictOrderByDescending)
-                {
-                    districts = districts.OrderBy(DistrictOrderBy).ToList();
-                }
-                else
-                {
-                    districts = districts.OrderByDescending(DistrictOrderBy).ToList();
-                }
-                return districts.ToList();
-            }
-        }
-
-        Table<FederalDistrict> districtTable = new Table<FederalDistrict>(new[]
-        {
-            new TableColumn<FederalDistrict>("Название", 30, district => string.Format("{0} федеральный округ", district.Name)),
-
-            new TableColumn<FederalDistrict>("Код ОКЭР", 10, district => district.Code.ToString()),
-
-            new TableColumn<FederalDistrict>("Плотность населения", 23, district => district.PopulationDencity.ToString())
-        });
-
-        #region Districts
-        public SubjectDistrictList(List<FederalDistrict> federalDistricts)
-        {
-            federalDistricts = Districts;
-            InputControl inputControl = new InputControl();
-            SelectDistrict = new ListSelector<FederalDistrict>(() => OrderedDistricts);
-            DistrictMenu = new Menu(new List<MenuItem>(SelectDistrict.Menu.Items) {
-                new MenuAction(ConsoleKey.F1, "Изменение округа", ChangeDistrict),
-
-                new MenuAction(ConsoleKey.F2, "Удаление округа", () => RemoveDistrict(SelectedDistrict)),
-
-                new MenuAction(ConsoleKey.F3, "Сортировать по плотности населения", PopulationDencitySort),
-
-                new MenuAction(ConsoleKey.F4, "Поиск по названию", SearchDistrictByName),
-
-                new MenuClose(ConsoleKey.Tab, "Вернуться к субъектам")
-            });
-            DistrictDescMenu = new Menu(new List<MenuItem>()
-            {
-                new MenuAction(ConsoleKey.D1, "По возрастанию", () => DistrictOrderByDescending = false),
-                new MenuAction(ConsoleKey.D2, "По убыванию", () => DistrictOrderByDescending = true)
-            });
-            DistrictChangeMenu = new Menu(new List<MenuItem>()
-            {
-                new MenuAction(ConsoleKey.D1, "Изменить название", () => ChangeDistrictName(SelectedDistrict)),
-
-                new MenuClose(ConsoleKey.Escape, "Выход")
-            });
-        }
-
-        public void ChangeDistrictName(FederalDistrict federalDistrict)
-        {
-            Console.Clear();
-            Console.WriteLine("Введите название округа: ");
-            var name = Console.ReadLine().Trim();
-            foreach (var subject in Subjects)
-            {
-                if (subject.FederalDistrict.Name == federalDistrict.Name)
-                {
-                    subject.FederalDistrict.Name = name;
-                }
-            }
-            Districts.Find(d => d.Name == federalDistrict.Name).Name = name;
-        }
-
-        public void RemoveDistrict(FederalDistrict federalDistrict)
-        {
-            Districts.Remove(federalDistrict);
-            Subjects.RemoveAll(s => s.FederalDistrict.Name == federalDistrict.Name);
-            SelectDistrict.SelectedNodeIndex--;
-        }
-
-        public void ChangeDistrict()
-        {
-            Console.Clear();
-            DistrictChangeMenu.Print();
-            PrintAllDistricts();
-            var key = Console.ReadKey().Key;
-            if (key == ConsoleKey.Escape)
-            {
-                return;
-            }
-            DistrictChangeMenu.Action(key);
-        }
-
-        public void PopulationDencitySort()
-        {
-            Console.Clear();
-            DistrictDescMenu.Print();
-            DistrictDescMenu.Action(Console.ReadKey().Key);
-        }
-
-        public void SearchDistrictByName()
-        {
-            Console.Clear();
-            Console.WriteLine("Введите название округа: ");
-            var name = Console.ReadLine().Trim();
-            var district = Districts.Find(d => d.Name == name);
-            if (district == null)
-            {
-                Console.WriteLine("Округа с таким названием не найдено");
-                Console.WriteLine("Нажмите любую клавишу, чтобы продолжить...");
-                Console.ReadKey();
-            }
-            else
-            {
-                SelectDistrict.SelectedNode = district;
-            }
-        }
-
-        public void CountDistrictPopulationDensity()
-        {
-            foreach (var district in Districts)
-            {
-                var population = 0.0;
-                var square = 0.0;
-                foreach (var subject in Subjects)
-                {
-                    if (subject.FederalDistrict.Name == district.Name)
-                    {
-                        population += subject.Population;
-                        square += subject.Square;
-                    }
-                }
-                district.PopulationDencity = Math.Round(population / square, 3);
-            }
-        }
-
-        
-        public void AddDistrict(FederalDistrict federalDistrict)
-        {
-            Districts.Add(federalDistrict);
-        }
-
-        public void RemoveDistrict(string districtName, List<Subject> subjects)
-        {
-            subjects.RemoveAll(s => s.FederalDistrict.Name == districtName);
-            RemoveDistrict(Districts.Find(d => d.Name == districtName));
-        }
-
-        public void PrintAllDistricts()
-        {
-            CountDistrictPopulationDensity();
-            districtTable.Print(OrderedDistricts, SelectedDistrict);
         }
         #endregion
     }
