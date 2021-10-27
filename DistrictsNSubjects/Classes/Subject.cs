@@ -6,15 +6,15 @@ namespace DistrictsNSubjects
 {
     public class Subject
     {
-        public ulong Code { get; }
+        public uint Code { get; }
         public string Name { get; set; }
         public string AdminCenterName { get; set; }
-        public float Population { get; set; }
-        public float Square { get; set; }
-        public float PopulationDencity { get => Population / Square; set => Math.Round(value, 3); }
+        public double Population { get; set; }
+        public double Square { get; set; }
+        public double PopulationDencity { get => Population / Square; set => Math.Round(value, 3); }
         public FederalDistrict FederalDistrict { get; set; }
 
-        public Subject(ulong code, string subjectName, FederalDistrict federalDistrict)
+        public Subject(uint code, string subjectName, FederalDistrict federalDistrict)
         {
             Code = code;
             Name = subjectName;

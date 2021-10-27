@@ -6,9 +6,10 @@ namespace DistrictsNSubjects
 {
     public class FederalDistrict
     {
-        public ulong Code { get; set; }
+        public uint Code { get; set; }
         public string Name { get; set; }
-        public FederalDistrict(ulong code, string name)
+        public double PopulationDencity { get; set; } = 0;
+        public FederalDistrict(uint code, string name)
         {
             Code = code;
             Name = name;

@@ -7,77 +7,51 @@ namespace RussiaRegions
 {
     public class Program
     {
-        static void Main(string[] args)
+        readonly static SubjectDistrictList subjectDistrictList1;
+        readonly static SubjectDistrictList subjectDistrictList2;
+
+        static Program()
         {
-            SubjectDistrictList subjectDistrictList = new SubjectDistrictList(MockSND.MockSubjects(MockSND.MockDistricts), MockSND.MockDistricts);
-            InputControl inputControl = new InputControl();
-            Console.SetWindowSize(150, 50);
-            Console.SetWindowPosition(0, 0);
-            while (MainMenuInput(subjectDistrictList, inputControl));
+            subjectDistrictList1 = new SubjectDistrictList(MockSND.MockSubjects(MockSND.MockDistricts).ToList())
+            {
+                Subjects = MockSND.MockSubjects(MockSND.MockDistricts).ToList(),
+                Districts = MockSND.MockDistricts.ToList()
+            };
+            subjectDistrictList2 = new SubjectDistrictList(MockSND.MockDistricts.ToList())
+            {
+                Subjects = MockSND.MockSubjects(MockSND.MockDistricts).ToList(),
+                Districts = MockSND.MockDistricts.ToList()
+            };
         }
 
-        static readonly Menu MainMenu = new Menu(new[] {
-            new MenuItem(ConsoleKey.F1, "Добавить субъект"),
-            new MenuItem(ConsoleKey.F2, "Вывести субъекты"),
-            new MenuItem(ConsoleKey.F3, "Вывести округа"),
-            new MenuItem(ConsoleKey.F4, "Вывести округа и их субъекты"),
-            new MenuItem(ConsoleKey.F5, "Удалить субъект"),
-            new MenuItem(ConsoleKey.F6, "Удалить округ"),
-            new MenuItem(ConsoleKey.Escape, "Выход"),
+        static void Main(string[] args)
+        {
+            Console.SetWindowSize(145, 50);
+            Console.SetWindowPosition(0, 0);
+            while (MainMenuInput());
+        }
+
+        static readonly Menu mainMenu = new Menu(new MenuItem[] {
+            new MenuAction(ConsoleKey.Tab, "Перейти к округам",
+                () => { while (DistrictMenuInput()); }),
+            new MenuClose(ConsoleKey.Escape, "Выход"),
         });
 
-        static bool MainMenuInput(SubjectDistrictList subjectDistrictList, InputControl inputControl)
+        static bool MainMenuInput()
         {
             Console.Clear();
-            MainMenu.Print();
-            switch (Console.ReadKey().Key)
-            {
-                case ConsoleKey.F1:
-                    Console.Clear();
-                    subjectDistrictList.AddSubject(new Subject(inputControl.ReadSubjectCode(), inputControl.ReadSubjectName(), inputControl.ReadFederalDistrictName(subjectDistrictList))
-                    {
-                        AdminCenterName = inputControl.ReadSubjectAdminCenter(),
-                        Population = inputControl.ReadSubjectPopulation(),
-                        Square = inputControl.ReadSubjectSquare()
-                    });
-                    inputControl.Wait();
-                    Console.Clear();
-                    break;
-                case ConsoleKey.F2:
-                    Console.Clear();
-                    inputControl.PrintSubjects(subjectDistrictList);
-                    inputControl.Wait();
-                    Console.Clear();
-                    break;
-                case ConsoleKey.F3:
-                    Console.Clear();
-                    inputControl.PrintDistricts(subjectDistrictList);
-                    inputControl.Wait();
-                    Console.Clear();
-                    break;
-                case ConsoleKey.F4:
-                    Console.Clear();
-                    inputControl.PrintAll(subjectDistrictList);
-                    inputControl.Wait();
-                    Console.Clear();
-                    break;
-                case ConsoleKey.F5:
-                    Console.Clear();
-                    inputControl.ReadSubjectNameToRemove(subjectDistrictList);
-                    inputControl.Wait();
-                    Console.Clear();
-                    break;
-                case ConsoleKey.F6:
-                    Console.Clear();
-                    inputControl.ReadDistrictNameToRemove(subjectDistrictList);
-                    inputControl.Wait();
-                    Console.Clear();
-                    break;
-                case ConsoleKey.Escape:
-                    Console.Clear();
-                    return false;
-            }
-            return true;
+            subjectDistrictList1.SubjectMenu.Print();
+            mainMenu.Print();
+            subjectDistrictList1.PrintAllSubjects();
+            var key = Console.ReadKey().Key;
+            return mainMenu.Action(key) ? subjectDistrictList1.SubjectMenu.Action(key) : false;
+        }
+        static bool DistrictMenuInput()
+        {
+            Console.Clear();
+            subjectDistrictList2.DistrictMenu.Print();
+            subjectDistrictList2.PrintAllDistricts();
+            return subjectDistrictList2.DistrictMenu.Action(Console.ReadKey().Key);
         }
     }
 }
