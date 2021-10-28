@@ -51,9 +51,9 @@ namespace RussiaRegions
 
             new TableColumn<Subject>("Население", 25, subject => string.Format("{0:# ##0.000} тыс.чел.", subject.Population)),
 
-            new TableColumn<Subject>("Площадь", 20, subject => string.Format("{0:# ##0.00} кв. м.", subject.Square)),
+            new TableColumn<Subject>("Площадь", 20, subject => string.Format("{0:# ##0.00} кв. км.", subject.Square)),
 
-            new TableColumn<Subject>("Плотность населения", 23, subject => string.Format("{0:# ##0.000} тыс. чел. / кв. м.", subject.PopulationDencity)),
+            new TableColumn<Subject>("Плотность населения", 28, subject => string.Format("{0:# ##0.000} тыс. чел. / кв. км.", subject.PopulationDencity)),
 
             new TableColumn<Subject>("Название округа", 17, subject => subject.FederalDistrict.Name),
 
@@ -90,7 +90,7 @@ namespace RussiaRegions
 
                     new TableColumn<FederalDistrict>("Код ОКЭР", 10, district => district.Code.ToString()),
 
-                    new TableColumn<FederalDistrict>("Плотность населения", 23, district => district.PopulationDencity.ToString())
+                    new TableColumn<FederalDistrict>("Плотность населения", 28, district => string.Format("{0:# ##0.000} тыс. чел. / кв. км.", district.PopulationDencity.ToString()))
                 });
 
         public SubjectDistrictList(List<Subject> subjects, List<FederalDistrict> federalDistricts)
@@ -278,8 +278,9 @@ namespace RussiaRegions
                         square += subject.Square;
                     }
                 }
-                if (population == 0)
+                if (population == 0.0)
                 {
+                    district.PopulationDencity = 0;
                     continue;
                 }
                 district.PopulationDencity = Math.Round(population / square, 3);

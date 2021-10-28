@@ -20,7 +20,7 @@ namespace RussiaRegions
 
         static void Main(string[] args)
         {
-            Console.SetWindowSize(165, 50);
+            Console.SetWindowSize(170, 50);
             Console.SetWindowPosition(0, 0);
             while (MainMenuInput()) ;
         }

@@ -29,7 +29,7 @@ namespace DistrictsNSubjects
             sb.Append(string.Format("Административный центр: {0}\n", AdminCenterName));
             sb.Append(string.Format("Население: {0:# ##0.000} тыс. чел.\n", Population));
             sb.Append(string.Format("Площадь: {0:# ##0.00} кв. м.\n", Square));
-            sb.Append(string.Format("Плотность населения: {0:# ##0.000} тыс. чел. / кв. м.\n", PopulationDencity));
+            sb.Append(string.Format("Плотность населения: {0:# ##0.000} тыс. чел. / кв. км.\n", PopulationDencity));
             sb.Append(string.Format("Федеральный округ: {0}\n", FederalDistrict.Name));
             return sb.ToString();
         }
