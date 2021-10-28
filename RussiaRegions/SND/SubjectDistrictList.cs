@@ -310,10 +310,6 @@ namespace RussiaRegions
                 Subjects.Find(s => s == subject).FederalDistrict = district;
                 Districts.Add(district);
             }
-            if (Subjects.Where(s => s.FederalDistrict == districtToDelete).Count() == 0)
-            {
-                Districts.Remove(districtToDelete);
-            }
         }
 
         public void AddDistrict(FederalDistrict federalDistrict)
@@ -362,11 +358,6 @@ namespace RussiaRegions
         public void RemoveSubject(Subject subject)
         {
             Console.Clear();
-            var subjects = Subjects.Where(s => s.FederalDistrict.Code == subject.FederalDistrict.Code);
-            if (subjects.Count() == 1)
-            {
-                Districts.RemoveAll(d => d.Code == subject.FederalDistrict.Code);
-            }
             Subjects.Remove(subject);
             SelectSubject.SelectedNodeIndex--;
         }
