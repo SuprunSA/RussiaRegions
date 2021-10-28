@@ -95,8 +95,9 @@ namespace RussiaRegions
 
         public SubjectDistrictList(List<Subject> subjects, List<FederalDistrict> federalDistricts)
         {
-            subjects = Subjects;
             InputControl inputControl = new InputControl();
+
+            subjects = Subjects;
             SelectSubject = new ListSelector<Subject>(() => OrderedSubjects);
             SubjectMenu = new Menu(new List<MenuItem>(SelectSubject.Menu.Items) {
                 new MenuAction(ConsoleKey.F1, "Новый субъект", () => AddSubject(inputControl)),
@@ -150,16 +151,19 @@ namespace RussiaRegions
 
             federalDistricts = Districts;
             SelectDistrict = new ListSelector<FederalDistrict>(() => OrderedDistricts);
-            DistrictMenu = new Menu(new List<MenuItem>(SelectDistrict.Menu.Items) {
-                new MenuAction(ConsoleKey.F1, "Изменение округа", ChangeDistrict),
+            DistrictMenu = new Menu(new List<MenuItem>(SelectDistrict.Menu.Items)
+            {
+                new MenuAction(ConsoleKey.F1, "Добавление округа", () => AddDistrict(inputControl)),
 
                 new MenuAction(ConsoleKey.F2, "Удаление округа", () => RemoveDistrict(SelectedDistrict)),
 
-                new MenuAction(ConsoleKey.F3, "Сортировать по плотности населения", PopulationDencitySort),
+                new MenuAction(ConsoleKey.F3, "Изменение округа", ChangeDistrict),
 
-                new MenuAction(ConsoleKey.F4, "Поиск по названию", () => SearchDistrictByName(inputControl)),
+                new MenuAction(ConsoleKey.F4, "Сортировать по плотности населения", PopulationDencitySort),
 
-                new MenuAction(ConsoleKey.F5, "Поиск по коду", () => SearchDistrictByCode(inputControl)),
+                new MenuAction(ConsoleKey.F5, "Поиск по названию", () => SearchDistrictByName(inputControl)),
+
+                new MenuAction(ConsoleKey.F6, "Поиск по коду", () => SearchDistrictByCode(inputControl)),
 
                 new MenuClose(ConsoleKey.Tab, "Вернуться к субъектам")
             });
@@ -177,6 +181,21 @@ namespace RussiaRegions
         }
 
         #region Districts
+        public void AddDistrict(InputControl inputControl)
+        {
+            Console.Clear();
+            inputControl.PrintDistrictList(Districts);
+            var code = inputControl.ReadFederalDistrictCode();
+            if (Districts.Where(d => d.Code == code).Count() == 1)
+            {
+                Console.WriteLine("Округ с таким кодом уже существует!");
+                inputControl.Wait();
+                return;
+            }
+            var name = inputControl.ReadFederalDistrictNameToSTH();
+            Districts.Add(new FederalDistrict(code, name));
+        }
+
         public void SearchDistrictByCode(InputControl inputControl)
         {
             Console.Clear();
@@ -185,8 +204,7 @@ namespace RussiaRegions
             if (district == null)
             {
                 Console.WriteLine("Округа с таким кодом не найдено");
-                Console.WriteLine("Нажмите любую клавишу, чтобы продолжить...");
-                Console.ReadKey();
+                inputControl.Wait();
             }
             else
             {
@@ -202,8 +220,7 @@ namespace RussiaRegions
             if (district == null)
             {
                 Console.WriteLine("Округа с таким названием не найдено");
-                Console.WriteLine("Нажмите любую клавишу, чтобы продолжить...");
-                Console.ReadKey();
+                inputControl.Wait();
             }
             else
             {
@@ -249,17 +266,21 @@ namespace RussiaRegions
 
         public void CountPopulationDensity()
         {
-            foreach(var district in Districts)
+            foreach (var district in Districts)
             {
                 var population = 0.0;
                 var square = 0.0;
-                foreach(var subject in Subjects)
+                foreach (var subject in Subjects)
                 {
                     if (subject.FederalDistrict.Code == district.Code)
                     {
                         population += subject.Population;
                         square += subject.Square;
                     }
+                }
+                if (population == 0)
+                {
+                    continue;
                 }
                 district.PopulationDencity = Math.Round(population / square, 3);
             }
@@ -276,20 +297,22 @@ namespace RussiaRegions
         public void ChangeDistrict(Subject subject, InputControl inputControl)
         {
             Console.Clear();
-            var name = inputControl.ReadFederalDistrictNameToSTH();
-            if (Subjects.Where(s => s.FederalDistrict.Code == subject.FederalDistrict.Code).Count() == 1)
+            inputControl.PrintDistrictList(Districts);
+            var code = inputControl.ReadFederalDistrictCode();
+            var districtToDelete = subject.FederalDistrict;
+            if (Districts.Where(d => d.Code == code).Count() == 1)
             {
-                RemoveDistrict(Districts.Find(d => d.Code == subject.FederalDistrict.Code));
-            }
-            if (Districts.Find(d => d.Name == name) != null)
-            {
-                Subjects.Find(s => s == subject).FederalDistrict = Districts.Find(d => d.Name == name);
+                Subjects.Find(s => s == subject).FederalDistrict = Districts.Find(d => d.Code == code);
             }
             else
             {
-                var code = inputControl.ReadFederalDistrictCode();
-                subject.FederalDistrict = new FederalDistrict(code, name);
-                AddDistrict(subject.FederalDistrict);
+                var district = new FederalDistrict(code, inputControl.ReadFederalDistrictNameToSTH());
+                Subjects.Find(s => s == subject).FederalDistrict = district;
+                Districts.Add(district);
+            }
+            if (Subjects.Where(s => s.FederalDistrict == districtToDelete).Count() == 0)
+            {
+                Districts.Remove(districtToDelete);
             }
         }
 
@@ -309,6 +332,7 @@ namespace RussiaRegions
             Console.Clear();
             subject.AdminCenterName = inputControl.ReadSubjectAdminCenter();
         }
+
         public void ChangePopulation(Subject subject, InputControl inputControl)
         {
             Console.Clear();
@@ -391,13 +415,6 @@ namespace RussiaRegions
             else
             {
                 SelectSubject.SelectedNode = foundSubject;
-            }
-        }
-        public SubjectDistrictList(IEnumerable<Subject> subjects)
-        {
-            foreach (var subject in subjects)
-            {
-                Subjects.Add(subject);
             }
         }
 

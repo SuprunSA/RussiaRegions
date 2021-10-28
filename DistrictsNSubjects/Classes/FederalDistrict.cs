@@ -18,8 +18,7 @@ namespace DistrictsNSubjects
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append(string.Format("Название: {0}\n", Name));
-            sb.Append(string.Format("Код: {0}", Code));
+            sb.Append(string.Format("{0} {1}", Code, Name));
             return sb.ToString();
         }
     }

@@ -90,5 +90,20 @@ namespace RussiaRegions
             }
             return code;
         }
+
+        public void Wait()
+        {
+            Console.WriteLine("Нажмите любую кнопку, чтобы продолжить...");
+            Console.ReadKey();
+        }
+
+        public void PrintDistrictList(List<FederalDistrict> federalDistricts)
+        {
+            Console.WriteLine("Список имеющихся округов: ");
+            foreach (var district in federalDistricts)
+            {
+                Console.WriteLine(district);
+            }
+        }
     }
 }
