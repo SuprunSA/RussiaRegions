@@ -13,4 +13,8 @@
     <ProjectReference Include="..\DistrictsNSubjects\DistrictsNSubjects.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="bin\" />
+  </ItemGroup>
+
 </Project>
