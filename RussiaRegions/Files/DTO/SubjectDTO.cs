@@ -1,5 +1,6 @@
 ﻿using DistrictsNSubjects;
 using System.Xml.Serialization;
+using System.Collections.Generic;
 
 namespace RussiaRegions
 {
@@ -11,7 +12,7 @@ namespace RussiaRegions
         public string AdminCenterName { get; set; }
         public double Population { get; set; }
         public double Square { get; set; }
-        public FederalDistrict FederalDistrict { get; set; }
+        public uint FederalDistrictCode { get; set; }
 
         public static SubjectDTO Map(Subject subject)
         {
@@ -22,16 +23,16 @@ namespace RussiaRegions
                 AdminCenterName = subject.AdminCenterName,
                 Population = subject.Population,
                 Square = subject.Square,
-                FederalDistrict = subject.FederalDistrict
+                FederalDistrictCode = subject.FederalDistrict.Code
             };
         }
 
-        public static Subject Map(SubjectDTO subjectDTO)
+        public static Subject Map(SubjectDTO subjectDTO, List<FederalDistrict> federalDistricts)
         {
             return new Subject(
                 subjectDTO.Code,
                 subjectDTO.Name,
-                subjectDTO.FederalDistrict)
+                federalDistricts.Find(d => d.Code == subjectDTO.FederalDistrictCode))
             {
                 AdminCenterName = subjectDTO.AdminCenterName,
                 Population = subjectDTO.Population,

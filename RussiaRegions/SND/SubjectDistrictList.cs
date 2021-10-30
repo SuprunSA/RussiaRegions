@@ -194,7 +194,7 @@ namespace RussiaRegions
         {
             try
             {
-                FileSelector.SaveToFile(name, DistrictList.Select(d => DistrictDTO.Map(d)));
+                FileSelector.SaveToFile(name, DistrictList.Select(d => DistrictDTO.Map(d).Code));
             }
             catch(Exception e)
             {
@@ -380,7 +380,7 @@ namespace RussiaRegions
                 if (loadedData != null)
                 {
                     Console.WriteLine("Чтение данных");
-                    LoadSubjects(loadedData.Select(s => SubjectDTO.Map(s)));
+                    LoadSubjects(loadedData.Select(s => SubjectDTO.Map(s, Districts)));
                     Console.WriteLine("Загрузка прошла успешно.");
                 }
             }
