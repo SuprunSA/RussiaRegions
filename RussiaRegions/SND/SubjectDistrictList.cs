@@ -113,9 +113,9 @@ namespace RussiaRegions
 
                 new MenuAction(ConsoleKey.F6, "Поиск по названию", SearchSubjectByName),
 
-                new MenuAction(ConsoleKey.F11, "Сохранить в файл", null),
+                new MenuAction(ConsoleKey.F8, "Сохранить", () => SaveSubjectsToFile("список субъектов", inputControl)),
 
-                new MenuAction(ConsoleKey.F12, "Загрузить из файла", null)
+                new MenuAction(ConsoleKey.F9, "Загрузить", () => LoadSubjecetsFromFile("список субъектов", inputControl))
             });
             SubjectSortMenu = new Menu(new List<MenuItem>() {
                 new MenuAction(ConsoleKey.D1, "Сортировка по численности наcеления",
@@ -170,9 +170,9 @@ namespace RussiaRegions
 
                 new MenuAction(ConsoleKey.F6, "Поиск по коду", () => SearchDistrictByCode(inputControl)),
 
-                new MenuAction(ConsoleKey.F8, "Сохранить в файл", () => SaveDistrictsToFile("список субъектов", inputControl)),
+                new MenuAction(ConsoleKey.F8, "Сохранить", () => SaveDistrictsToFile("список округов", inputControl)),
 
-                new MenuAction(ConsoleKey.F9, "Загрузить из файла", () => LoadDistrictsFromFile("список субъектов", inputControl)),
+                new MenuAction(ConsoleKey.F9, "Загрузить", () => LoadDistrictsFromFile("список округов", inputControl)),
 
                 new MenuClose(ConsoleKey.Tab, "Вернуться к субъектам")
             });
@@ -356,6 +356,52 @@ namespace RussiaRegions
         #endregion
 
         #region Subjects
+        void SaveSubjectsToFile(string name, InputControl inputControl)
+        {
+            try
+            {
+                FileSelector.SaveToFile(name, SubjectList.Select(s => SubjectDTO.Map(s)));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("При сохранении в файл произошла ошибка: {0}", e.ToString());
+            }
+            finally
+            {
+                inputControl.Wait();
+            }
+        }
+
+        void LoadSubjecetsFromFile(string name, InputControl inputControl)
+        {
+            try
+            {
+                var loadedData = FileSelector.LoadFromFile<SubjectDTO>(name);
+                if (loadedData != null)
+                {
+                    Console.WriteLine("Чтение данных");
+                    LoadSubjects(loadedData.Select(s => SubjectDTO.Map(s)));
+                    Console.WriteLine("Загрузка прошла успешно.");
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Ошибка, файл содержит некорректные данные: ", e.Message);
+            }
+            finally
+            {
+                inputControl.Wait();
+            }
+        }
+
+        void LoadSubjects(IEnumerable<Subject> subjects)
+        {
+            Subjects.Clear();
+            foreach (var subject in subjects)
+            {
+                AddSubject(subject);
+            }
+        }
 
         void ChangeDistrict(Subject subject, InputControl inputControl)
         {
