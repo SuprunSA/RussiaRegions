@@ -2,13 +2,25 @@
 using System.Collections.Generic;
 using System.Text;
 using DistrictsNSubjects;
+using System.Linq;
 
 namespace RussiaRegions
 {
-    class ListsDto
+    public class ListsDto
     {
         public DistrictDTO[] Districts { get; set; }
         public SubjectDTO[] Subjects { get; set; }
+
+        public ListsDto(List<Subject> subjects, List<District> districts)
+        {
+            Districts = Map(districts.ToArray());
+            Subjects = Map(subjects.ToArray());
+        }
+        
+        public ListsDto()
+        {
+
+        }
 
         public DistrictDTO[] Map(District[] districts)
         {

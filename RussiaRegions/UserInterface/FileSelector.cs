@@ -6,7 +6,7 @@ namespace RussiaRegions
 {
     class FileSelector
     {
-        public static void SaveToFile<T>(string title, T[] data)
+        public static void SaveToFile<ListsDTO>(string title, ListsDTO data)
         {
             Console.Clear();
             Console.WriteLine("{0}: сохранение в файл", title);
@@ -20,7 +20,7 @@ namespace RussiaRegions
                         FileManager.SaveToJson(fileName, data);
                         break;
                     case FileTypes.Xml:
-                        FileManager.SaveToXml(fileName, data.ToArray());
+                        FileManager.SaveToXml(fileName, data);
                         break;
                 }
                 Console.WriteLine("Файл успешно сохранен.");
@@ -31,24 +31,24 @@ namespace RussiaRegions
             }
         }
 
-        public static T LoadFromFile<T>(string title)
+        public static ListsDTO LoadFromFile<ListsDTO>(string title)
         {
             Console.Clear();
             Console.WriteLine("{0}: загрузка из файла", title);
             Console.WriteLine("Все существующие файлы будут удалены! Продолжить?");
             if (!FileControl.ReadYN())
             {
-                return default(T);
+                return default(ListsDTO);
             }
             string fileName = FileControl.ReadPathToLoad();
             FileTypes? fileTypes = FileManager.CheckFileType(fileName);
-            T data = default(T);
+            ListsDTO data = default(ListsDTO);
             try
             {
                 switch (fileTypes)
                 {
-                    case FileTypes.Xml: data = FileManager.LoadFromXml<T>(fileName); break;
-                    case FileTypes.Json: data = FileManager.LoadFromJson<T>(fileName); break;
+                    case FileTypes.Xml: data = FileManager.LoadFromXml<ListsDTO>(fileName); break;
+                    case FileTypes.Json: data = FileManager.LoadFromJson<ListsDTO>(fileName); break;
                     default: throw new InvalidOperationException("Формат файла не распознан. Используйте XML или JSON.");
                 }
             }

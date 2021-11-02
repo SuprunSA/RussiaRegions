@@ -8,7 +8,7 @@ namespace RussiaRegions
     class SubjectDistrictList
     {
         public List<Subject> Subjects = new List<Subject>();
-        public IEnumerable<Subject> SubjectList => Subjects;
+
         readonly Menu SubjectSortDescMenu;
         readonly Menu SubjectSortMenu;
         readonly Menu SubjectChangeMenu;
@@ -61,7 +61,7 @@ namespace RussiaRegions
         });
 
         public List<District> Districts = new List<District>();
-        public IEnumerable<District> DistrictList => Districts;
+
         public Menu DistrictMenu;
         readonly Menu DistrictDescMenu;
         readonly Menu DistrictChangeMenu;
@@ -112,10 +112,10 @@ namespace RussiaRegions
                 new MenuAction(ConsoleKey.F5, "Фильтр по федеральным округам", DistrictFilter),
 
                 new MenuAction(ConsoleKey.F6, "Поиск по названию", SearchSubjectByName),
-/*
-                new MenuAction(ConsoleKey.F8, "Сохранить", () => SaveSubjectsToFile("список субъектов", inputControl)),
 
-                new MenuAction(ConsoleKey.F9, "Загрузить", () => LoadSubjecetsFromFile("список субъектов", inputControl))*/
+                new MenuAction(ConsoleKey.F8, "Сохранить", () => SaveToFile(inputControl)),
+
+                new MenuAction(ConsoleKey.F9, "Загрузить", () => LoadFromFile(inputControl))
             });
             SubjectSortMenu = new Menu(new List<MenuItem>() {
                 new MenuAction(ConsoleKey.D1, "Сортировка по численности наcеления",
@@ -186,15 +186,6 @@ namespace RussiaRegions
         }
 
         #region Districts
-        void LoadDistricts(IEnumerable<District> districts)
-        {
-            Districts.Clear();
-            foreach(var district in districts)
-            {
-                AddDistrict(district);
-            }
-        }
-
         void AddDistrict(District federalDistrict)
         {
             Districts.Add(federalDistrict);
@@ -314,55 +305,6 @@ namespace RussiaRegions
         #endregion
 
         #region Subjects
-        /*void SaveSubjectsToFile(string name, InputControl inputControl)
-        {
-            try
-            {
-                Console.WriteLine("Сохранение в файл");
-                FileSelector.SaveToFile(name, SubjectList.Select(s => SubjectDTO.Map(s)).ToArray());
-                Console.WriteLine("Сохранение прошло успешно.");
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("При сохранении в файл произошла ошибка: {0}", e.ToString());
-            }
-            finally
-            {
-                inputControl.Wait();
-            }
-        }
-
-        void LoadSubjecetsFromFile(string name, InputControl inputControl)
-        {
-            try
-            {
-                var loadedData = FileSelector.LoadFromFile<SubjectDTO>(name);
-                if (loadedData != null)
-                {
-                    Console.WriteLine("Чтение данных");
-                    LoadSubjects(loadedData.Select(s => SubjectDTO.Map(s, Districts)));
-                    Console.WriteLine("Загрузка прошла успешно.");
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Ошибка, файл содержит некорректные данные: ", e.Message);
-            }
-            finally
-            {
-                inputControl.Wait();
-            }
-        }*/
-
-        void LoadSubjects(IEnumerable<Subject> subjects)
-        {
-            Subjects.Clear();
-            foreach (var subject in subjects)
-            {
-                AddSubject(subject);
-            }
-        }
-
         void ChangeDistrict(Subject subject, InputControl inputControl)
         {
             Console.Clear();
@@ -491,11 +433,13 @@ namespace RussiaRegions
         }
         #endregion
 
+        #region Files
         public void SaveToFile(InputControl inputControl)
         {
+            var listDTO = new ListsDto(Subjects, Districts);
             try
             {
-
+                FileSelector.SaveToFile("Список", listDTO);
             }
             catch(Exception e)
             {
@@ -506,5 +450,26 @@ namespace RussiaRegions
                 inputControl.Wait();
             }
         }
+
+        public void LoadFromFile(InputControl inputControl)
+        {
+            var loadedList = FileSelector.LoadFromFile<ListsDto>("Список");
+            try
+            {
+                Console.WriteLine("Чтение данных");
+                Districts = loadedList.Map(loadedList.Districts).ToList();
+                Subjects = loadedList.Map(loadedList.Subjects, Districts).ToList();
+                Console.WriteLine("Загрузка прошла успешно.");
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine("При чтении из файла произошла ошибка: {0}", e.Message);
+            }
+            finally
+            {
+                inputControl.Wait();
+            }
+        }
+        #endregion
     }
 }

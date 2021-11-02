@@ -7,33 +7,33 @@ namespace RussiaRegions
 {
     static class FileManager
     {
-        public static void SaveToJson<T>(string fileName, T data)
+        public static void SaveToJson<ListsDTO>(string fileName, ListsDTO data)
         {
             string jsonString = JsonSerializer.Serialize(data);
             File.WriteAllText(fileName, jsonString);
         }
 
-        public static T LoadFromJson<T>(string fileName)
+        public static ListsDTO LoadFromJson<ListsDTO>(string fileName)
         {
             string jsonString = File.ReadAllText(fileName);
-            return JsonSerializer.Deserialize<T>(jsonString);
+            return JsonSerializer.Deserialize<ListsDTO>(jsonString);
         }
 
-        public static void SaveToXml<T>(string fileName, T data)
+        public static void SaveToXml<ListsDTO>(string fileName, ListsDTO data)
         {
-            XmlSerializer serializer = new XmlSerializer(data.GetType());
+            XmlSerializer serializer = new XmlSerializer(typeof(ListsDto));
             using (var fs = new FileStream(fileName, FileMode.Create))
             {
                 serializer.Serialize(fs, data);
             }
         }
 
-        public static T LoadFromXml<T>(string fileName)
+        public static ListsDTO LoadFromXml<ListsDTO>(string fileName)
         {
-            XmlSerializer serializer = new XmlSerializer(typeof(T));
+            XmlSerializer serializer = new XmlSerializer(typeof(ListsDTO));
             using (var fs = new FileStream(fileName, FileMode.Open))
             {
-                return (T)serializer.Deserialize(fs);
+                return (ListsDTO)serializer.Deserialize(fs);
             }
         }
 
