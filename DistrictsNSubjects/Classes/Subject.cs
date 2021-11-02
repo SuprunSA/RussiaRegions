@@ -12,9 +12,9 @@ namespace DistrictsNSubjects
         public double Population { get; set; }
         public double Square { get; set; }
         public double PopulationDencity { get => Population / Square; set => Math.Round(value, 3); }
-        public FederalDistrict FederalDistrict { get; set; }
+        public District FederalDistrict { get; set; }
 
-        public Subject(uint code, string subjectName, FederalDistrict federalDistrict)
+        public Subject(uint code, string subjectName, District federalDistrict)
         {
             Code = code;
             Name = subjectName;

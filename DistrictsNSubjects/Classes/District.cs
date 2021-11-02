@@ -4,12 +4,12 @@ using System.Text;
 
 namespace DistrictsNSubjects
 {
-    public class FederalDistrict
+    public class District
     {
         public uint Code { get; set; }
         public string Name { get; set; }
         public double PopulationDencity { get; set; } = 0;
-        public FederalDistrict(uint code, string name)
+        public District(uint code, string name)
         {
             Code = code;
             Name = name;

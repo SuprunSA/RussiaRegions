@@ -60,16 +60,16 @@ namespace RussiaRegions
             new TableColumn<Subject>("Код округа", 12, subject => subject.FederalDistrict.Code.ToString())
         });
 
-        public List<FederalDistrict> Districts = new List<FederalDistrict>();
-        public IEnumerable<FederalDistrict> DistrictList => Districts;
+        public List<District> Districts = new List<District>();
+        public IEnumerable<District> DistrictList => Districts;
         public Menu DistrictMenu;
         readonly Menu DistrictDescMenu;
         readonly Menu DistrictChangeMenu;
-        public ListSelector<FederalDistrict> SelectDistrict { get; }
-        public FederalDistrict SelectedDistrict => SelectDistrict.SelectedNode;
-        Func<FederalDistrict, object> DistrictOrderBy = district => district.PopulationDencity;
+        public ListSelector<District> SelectDistrict { get; }
+        public District SelectedDistrict => SelectDistrict.SelectedNode;
+        Func<District, object> DistrictOrderBy = district => district.PopulationDencity;
         public bool DistrictOrderByDescending = false;
-        IList<FederalDistrict> OrderedDistricts
+        IList<District> OrderedDistricts
         {
             get
             {
@@ -85,16 +85,16 @@ namespace RussiaRegions
                 return districts.ToList();
             }
         }
-        Table<FederalDistrict> districtTable = new Table<FederalDistrict>(new[]
+        Table<District> districtTable = new Table<District>(new[]
                 {
-                    new TableColumn<FederalDistrict>("Название", 30, district => string.Format("{0} федеральный округ", district.Name)),
+                    new TableColumn<District>("Название", 30, district => string.Format("{0} федеральный округ", district.Name)),
 
-                    new TableColumn<FederalDistrict>("Код ОКЭР", 10, district => district.Code.ToString()),
+                    new TableColumn<District>("Код ОКЭР", 10, district => district.Code.ToString()),
 
-                    new TableColumn<FederalDistrict>("Плотность населения", 28, district => string.Format("{0:# ##0.000} тыс. чел. / кв. км.", district.PopulationDencity.ToString()))
+                    new TableColumn<District>("Плотность населения", 28, district => string.Format("{0:# ##0.000} тыс. чел. / кв. км.", district.PopulationDencity.ToString()))
                 });
 
-        public SubjectDistrictList(List<Subject> subjects, List<FederalDistrict> federalDistricts)
+        public SubjectDistrictList(List<Subject> subjects, List<District> federalDistricts)
         {
             InputControl inputControl = new InputControl();
 
@@ -112,10 +112,10 @@ namespace RussiaRegions
                 new MenuAction(ConsoleKey.F5, "Фильтр по федеральным округам", DistrictFilter),
 
                 new MenuAction(ConsoleKey.F6, "Поиск по названию", SearchSubjectByName),
-
+/*
                 new MenuAction(ConsoleKey.F8, "Сохранить", () => SaveSubjectsToFile("список субъектов", inputControl)),
 
-                new MenuAction(ConsoleKey.F9, "Загрузить", () => LoadSubjecetsFromFile("список субъектов", inputControl))
+                new MenuAction(ConsoleKey.F9, "Загрузить", () => LoadSubjecetsFromFile("список субъектов", inputControl))*/
             });
             SubjectSortMenu = new Menu(new List<MenuItem>() {
                 new MenuAction(ConsoleKey.D1, "Сортировка по численности наcеления",
@@ -155,7 +155,7 @@ namespace RussiaRegions
             });
 
             federalDistricts = Districts;
-            SelectDistrict = new ListSelector<FederalDistrict>(() => OrderedDistricts);
+            SelectDistrict = new ListSelector<District>(() => OrderedDistricts);
             DistrictMenu = new Menu(new List<MenuItem>(SelectDistrict.Menu.Items)
             {
                 new MenuAction(ConsoleKey.F1, "Добавление округа", () => AddDistrict(inputControl)),
@@ -169,10 +169,6 @@ namespace RussiaRegions
                 new MenuAction(ConsoleKey.F5, "Поиск по названию", () => SearchDistrictByName(inputControl)),
 
                 new MenuAction(ConsoleKey.F6, "Поиск по коду", () => SearchDistrictByCode(inputControl)),
-
-                new MenuAction(ConsoleKey.F8, "Сохранить", () => SaveDistrictsToFile("список округов", inputControl)),
-
-                new MenuAction(ConsoleKey.F9, "Загрузить", () => LoadDistrictsFromFile("список округов", inputControl)),
 
                 new MenuClose(ConsoleKey.Tab, "Вернуться к субъектам")
             });
@@ -190,45 +186,7 @@ namespace RussiaRegions
         }
 
         #region Districts
-        void SaveDistrictsToFile(string name, InputControl inputControl)
-        {
-            try
-            {
-                FileSelector.SaveToFile(name, DistrictList.Select(d => DistrictDTO.Map(d).Code));
-            }
-            catch(Exception e)
-            {
-                Console.WriteLine("При сохранении в файл произошла ошибка: {0}", e.ToString());
-            }
-            finally
-            {
-                inputControl.Wait();
-            }
-        }
-
-        void LoadDistrictsFromFile(string name, InputControl inputControl)
-        {
-            try
-            {
-                var loadedData = FileSelector.LoadFromFile<DistrictDTO>(name);
-                if(loadedData != null)
-                {
-                    Console.WriteLine("Чтение данных");
-                    LoadDistricts(loadedData.Select(d => DistrictDTO.Map(d)));
-                    Console.WriteLine("Загрузка прошла успешно.");
-                }
-            }
-            catch(Exception e)
-            {
-                Console.WriteLine("Ошибка, файл содержит некорректные данные: ", e.Message);
-            }
-            finally
-            {
-                inputControl.Wait();
-            }
-        }
-
-        void LoadDistricts(IEnumerable<FederalDistrict> districts)
+        void LoadDistricts(IEnumerable<District> districts)
         {
             Districts.Clear();
             foreach(var district in districts)
@@ -237,7 +195,7 @@ namespace RussiaRegions
             }
         }
 
-        void AddDistrict(FederalDistrict federalDistrict)
+        void AddDistrict(District federalDistrict)
         {
             Districts.Add(federalDistrict);
         }
@@ -254,7 +212,7 @@ namespace RussiaRegions
                 return;
             }
             var name = inputControl.ReadFederalDistrictNameToSTH();
-            Districts.Add(new FederalDistrict(code, name));
+            Districts.Add(new District(code, name));
         }
 
         void SearchDistrictByCode(InputControl inputControl)
@@ -304,7 +262,7 @@ namespace RussiaRegions
             DistrictChangeMenu.Action(Console.ReadKey().Key);
         }
 
-        void ChangeDistrictName(FederalDistrict federalDistrict, InputControl inputControl)
+        void ChangeDistrictName(District federalDistrict, InputControl inputControl)
         {
             Console.Clear();
             var name = inputControl.ReadFederalDistrictNameToSTH();
@@ -318,7 +276,7 @@ namespace RussiaRegions
             Districts.Find(d => d.Code == federalDistrict.Code).Name = name;
         }
 
-        void RemoveDistrict(FederalDistrict federalDistrict)
+        void RemoveDistrict(District federalDistrict)
         {
             Districts.Remove(federalDistrict);
             Subjects.RemoveAll(s => s.FederalDistrict.Code == federalDistrict.Code);
@@ -356,11 +314,13 @@ namespace RussiaRegions
         #endregion
 
         #region Subjects
-        void SaveSubjectsToFile(string name, InputControl inputControl)
+        /*void SaveSubjectsToFile(string name, InputControl inputControl)
         {
             try
             {
-                FileSelector.SaveToFile(name, SubjectList.Select(s => SubjectDTO.Map(s)));
+                Console.WriteLine("Сохранение в файл");
+                FileSelector.SaveToFile(name, SubjectList.Select(s => SubjectDTO.Map(s)).ToArray());
+                Console.WriteLine("Сохранение прошло успешно.");
             }
             catch (Exception e)
             {
@@ -392,7 +352,7 @@ namespace RussiaRegions
             {
                 inputControl.Wait();
             }
-        }
+        }*/
 
         void LoadSubjects(IEnumerable<Subject> subjects)
         {
@@ -415,7 +375,7 @@ namespace RussiaRegions
             }
             else
             {
-                var district = new FederalDistrict(code, inputControl.ReadFederalDistrictNameToSTH());
+                var district = new District(code, inputControl.ReadFederalDistrictNameToSTH());
                 Subjects.Find(s => s == subject).FederalDistrict = district;
                 Districts.Add(district);
             }
@@ -530,5 +490,21 @@ namespace RussiaRegions
             subjectTable.Print(OrderedSubjects, SelectedSubject);
         }
         #endregion
+
+        public void SaveToFile(InputControl inputControl)
+        {
+            try
+            {
+
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine("Ошибка при сохранении в файл: ", e.Message);
+            }
+            finally
+            {
+                inputControl.Wait();
+            }
+        }
     }
 }

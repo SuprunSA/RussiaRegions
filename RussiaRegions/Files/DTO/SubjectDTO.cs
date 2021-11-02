@@ -27,7 +27,7 @@ namespace RussiaRegions
             };
         }
 
-        public static Subject Map(SubjectDTO subjectDTO, List<FederalDistrict> federalDistricts)
+        public static Subject Map(SubjectDTO subjectDTO, List<District> federalDistricts)
         {
             return new Subject(
                 subjectDTO.Code,

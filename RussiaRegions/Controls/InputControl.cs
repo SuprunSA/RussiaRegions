@@ -55,10 +55,10 @@ namespace RussiaRegions
             return square;
         }
 
-        public FederalDistrict ReadFederalDistrictName(List<FederalDistrict> federalDistricts)
+        public District ReadFederalDistrictName(List<District> federalDistricts)
         {
             string name;
-            FederalDistrict federalDistrict;
+            District federalDistrict;
             Console.WriteLine("Введите название федерального округа: ");
             name = Console.ReadLine().Trim();
             foreach (var district in federalDistricts)
@@ -68,7 +68,7 @@ namespace RussiaRegions
                     return district;
                 }
             }
-            federalDistrict = new FederalDistrict(ReadFederalDistrictCode(), name);
+            federalDistrict = new District(ReadFederalDistrictCode(), name);
             federalDistricts.Add(federalDistrict);
             return federalDistrict;
         }
@@ -97,7 +97,7 @@ namespace RussiaRegions
             Console.ReadKey();
         }
 
-        public void PrintDistrictList(List<FederalDistrict> federalDistricts)
+        public void PrintDistrictList(List<District> federalDistricts)
         {
             Console.WriteLine("Список имеющихся округов: ");
             foreach (var district in federalDistricts)

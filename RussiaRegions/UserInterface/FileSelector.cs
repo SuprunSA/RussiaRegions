@@ -6,7 +6,7 @@ namespace RussiaRegions
 {
     class FileSelector
     {
-        public static void SaveToFile<T>(string title, IEnumerable<T> data)
+        public static void SaveToFile<T>(string title, T[] data)
         {
             Console.Clear();
             Console.WriteLine("{0}: сохранение в файл", title);
@@ -31,18 +31,18 @@ namespace RussiaRegions
             }
         }
 
-        public static IEnumerable<T> LoadFromFile<T>(string title)
+        public static T LoadFromFile<T>(string title)
         {
             Console.Clear();
             Console.WriteLine("{0}: загрузка из файла", title);
             Console.WriteLine("Все существующие файлы будут удалены! Продолжить?");
             if (!FileControl.ReadYN())
             {
-                return null;
+                return default(T);
             }
             string fileName = FileControl.ReadPathToLoad();
             FileTypes? fileTypes = FileManager.CheckFileType(fileName);
-            IEnumerable<T> data = null;
+            T data = default(T);
             try
             {
                 switch (fileTypes)

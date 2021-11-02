@@ -6,7 +6,7 @@ namespace RussiaRegions
 {
     static class MockSND
     {
-        public static IEnumerable<Subject> MockSubjects(IEnumerable<FederalDistrict> districts)
+        public static IEnumerable<Subject> MockSubjects(IEnumerable<District> districts)
         {
             return new List<Subject>()
             {
@@ -21,10 +21,10 @@ namespace RussiaRegions
             };
         }
 
-        public static IEnumerable<FederalDistrict> MockDistricts => new List<FederalDistrict>()
+        public static IEnumerable<District> MockDistricts => new List<District>()
         {
-            new FederalDistrict(235, "Центральный"),
-            new FederalDistrict(7421, "Южный")
+            new District(235, "Центральный"),
+            new District(7421, "Южный")
         };
     }
 }

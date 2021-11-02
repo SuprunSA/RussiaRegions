@@ -10,7 +10,7 @@ namespace RussiaRegions
         public string Name { get; set; }
         public double PopulationDencity { get; set; }
 
-        public static DistrictDTO Map(FederalDistrict federalDistrict)
+        public static DistrictDTO Map(District federalDistrict)
         {
             return new DistrictDTO()
             {
@@ -20,9 +20,12 @@ namespace RussiaRegions
             };
         }
 
-        public static FederalDistrict Map(DistrictDTO districtDTO)
+        public static District Map(DistrictDTO districtDTO)
         {
-            return new FederalDistrict(districtDTO.Code, districtDTO.Name);
+            return new District(districtDTO.Code, districtDTO.Name) 
+            { 
+                PopulationDencity = districtDTO.PopulationDencity 
+            };
         }
     }
 }
