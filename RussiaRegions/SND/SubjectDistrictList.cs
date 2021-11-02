@@ -437,38 +437,24 @@ namespace RussiaRegions
         public void SaveToFile(InputControl inputControl)
         {
             var listDTO = new ListsDto(Subjects, Districts);
-            try
-            {
-                FileSelector.SaveToFile("Список", listDTO);
-            }
-            catch(Exception e)
-            {
-                Console.WriteLine("Ошибка при сохранении в файл: ", e.Message);
-            }
-            finally
-            {
-                inputControl.Wait();
-            }
+
+            FileSelector.SaveToFile("Список", listDTO);
+
+            inputControl.Wait();
+
         }
 
         public void LoadFromFile(InputControl inputControl)
         {
             var loadedList = FileSelector.LoadFromFile<ListsDto>("Список");
-            try
-            {
-                Console.WriteLine("Чтение данных");
-                Districts = loadedList.Map(loadedList.Districts).ToList();
-                Subjects = loadedList.Map(loadedList.Subjects, Districts).ToList();
-                Console.WriteLine("Загрузка прошла успешно.");
-            }
-            catch(Exception e)
-            {
-                Console.WriteLine("При чтении из файла произошла ошибка: {0}", e.Message);
-            }
-            finally
-            {
-                inputControl.Wait();
-            }
+
+            Console.WriteLine("Чтение данных");
+            Districts = loadedList.Map(loadedList.Districts).ToList();
+            Subjects = loadedList.Map(loadedList.Subjects, Districts).ToList();
+            Console.WriteLine("Загрузка прошла успешно.");
+
+            inputControl.Wait();
+
         }
         #endregion
     }
