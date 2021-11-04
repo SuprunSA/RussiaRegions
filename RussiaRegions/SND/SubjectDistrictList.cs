@@ -94,11 +94,11 @@ namespace RussiaRegions
                     new TableColumn<District>("Плотность населения", 28, district => string.Format("{0:# ##0.000} тыс. чел. / кв. км.", district.PopulationDencity.ToString()))
                 });
 
-        public SubjectDistrictList(List<Subject> subjects, List<District> federalDistricts)
+        public SubjectDistrictList(List<Subject> subjects, List<District> districts)
         {
             InputControl inputControl = new InputControl();
 
-            subjects = Subjects;
+            Subjects = subjects;
             SelectSubject = new ListSelector<Subject>(() => OrderedSubjects);
             SubjectMenu = new Menu(new List<MenuItem>(SelectSubject.Menu.Items) {
                 new MenuAction(ConsoleKey.F1, "Новый субъект", () => AddSubject(inputControl)),
@@ -154,7 +154,7 @@ namespace RussiaRegions
                 new MenuClose(ConsoleKey.Escape, "Выход")
             });
 
-            federalDistricts = Districts;
+            Districts = districts;
             SelectDistrict = new ListSelector<District>(() => OrderedDistricts);
             DistrictMenu = new Menu(new List<MenuItem>(SelectDistrict.Menu.Items)
             {
@@ -186,11 +186,6 @@ namespace RussiaRegions
         }
 
         #region Districts
-        void AddDistrict(District federalDistrict)
-        {
-            Districts.Add(federalDistrict);
-        }
-
         void AddDistrict(InputControl inputControl)
         {
             Console.Clear();
@@ -436,7 +431,7 @@ namespace RussiaRegions
         #region Files
         public void SaveToFile(InputControl inputControl)
         {
-            var listDTO = new ListsDto(Subjects, Districts);
+            var listDTO = new ListsDTO(Subjects, Districts);
 
             FileSelector.SaveToFile("Список", listDTO);
 
@@ -446,7 +441,7 @@ namespace RussiaRegions
 
         public void LoadFromFile(InputControl inputControl)
         {
-            var loadedList = FileSelector.LoadFromFile<ListsDto>("Список");
+            var loadedList = FileSelector.LoadFromFile("Список");
 
             Console.WriteLine("Чтение данных");
             Districts = loadedList.Map(loadedList.Districts).ToList();

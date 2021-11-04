@@ -6,18 +6,18 @@ using System.Linq;
 
 namespace RussiaRegions
 {
-    public class ListsDto
+    public class ListsDTO
     {
         public DistrictDTO[] Districts { get; set; }
         public SubjectDTO[] Subjects { get; set; }
 
-        public ListsDto(List<Subject> subjects, List<District> districts)
+        public ListsDTO(List<Subject> subjects, List<District> districts)
         {
             Districts = Map(districts.ToArray());
             Subjects = Map(subjects.ToArray());
         }
         
-        public ListsDto()
+        public ListsDTO()
         {
 
         }

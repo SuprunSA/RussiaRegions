@@ -4,24 +4,36 @@ using System.Text;
 
 namespace RussiaRegions
 {
-    internal class TableColumn<T> where T : class
+    class Table<T> where T : class
     {
-        public string Title { get; }
-        public int Width { get; }
-        public Func<T, string> GetFormattedValue { get; }
-
-        public TableColumn(string title, int width,
-            Func<T, string> getFormattedValue)
+        public Table(IEnumerable<TableColumn<T>> columns)
         {
-            Title = title;
-            Width = width;
-            GetFormattedValue = getFormattedValue;
+            Columns = columns;
         }
 
-        public string PrintCell(T obj) =>
-            string.Format("{0," + Width + "}", GetFormattedValue(obj));
+        readonly IEnumerable<TableColumn<T>> Columns;
 
-        public string PrintTitle() =>
-            string.Format("{0," + -Width + "}", Title);
+        public void Print(IEnumerable<T> rows, T selectedRow)
+        {
+            foreach (var column in Columns)
+            {
+                Console.Write("{0} ", column.PrintTitle());
+            }
+            Console.WriteLine();
+            foreach (var row in rows)
+            {
+                if (row == selectedRow)
+                {
+                    Console.BackgroundColor = ConsoleColor.White;
+                    Console.ForegroundColor = ConsoleColor.Black;
+                }
+                foreach (var column in Columns)
+                {
+                    Console.Write("{0} ", column.PrintCell(row));
+                }
+                Console.ResetColor();
+                Console.WriteLine();
+            }
+        }
     }
 }

@@ -40,7 +40,7 @@ namespace RussiaRegions
                     }
                     if (menuItem is MenuAction)
                     {
-                        (menuItem as MenuAction)?.Action();
+                        (menuItem as MenuAction).Action();
                     }
                 }
             }

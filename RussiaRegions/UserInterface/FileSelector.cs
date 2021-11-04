@@ -6,7 +6,7 @@ namespace RussiaRegions
 {
     class FileSelector
     {
-        public static void SaveToFile<ListsDTO>(string title, ListsDTO data)
+        public static void SaveToFile(string title, ListsDTO data)
         {
             Console.Clear();
             Console.WriteLine("{0}: сохранение в файл", title);
@@ -31,26 +31,26 @@ namespace RussiaRegions
             }
         }
 
-        public static ListsDTO LoadFromFile<ListsDTO>(string title)
+        public static ListsDTO LoadFromFile(string title)
         {
             Console.Clear();
             Console.WriteLine("{0}: загрузка из файла", title);
             Console.WriteLine("Все существующие файлы будут удалены! Продолжить?");
             if (!FileControl.ReadYN())
             {
-                return default(ListsDTO);
+                return default;
             }
             string fileName = FileControl.ReadPathToLoad();
             FileTypes? fileTypes = FileManager.CheckFileType(fileName);
-            ListsDTO data = default(ListsDTO);
+            ListsDTO data = default;
             try
             {
-                switch (fileTypes)
+                data = fileTypes switch
                 {
-                    case FileTypes.Xml: data = FileManager.LoadFromXml<ListsDTO>(fileName); break;
-                    case FileTypes.Json: data = FileManager.LoadFromJson<ListsDTO>(fileName); break;
-                    default: throw new InvalidOperationException("Формат файла не распознан. Используйте XML или JSON.");
-                }
+                    FileTypes.Xml => FileManager.LoadFromXml(fileName),
+                    FileTypes.Json => FileManager.LoadFromJson(fileName),
+                    _ => throw new InvalidOperationException("Формат файла не распознан. Используйте XML или JSON."),
+                };
             }
             catch(Exception e)
             {

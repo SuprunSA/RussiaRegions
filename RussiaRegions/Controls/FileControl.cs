@@ -9,7 +9,7 @@ namespace RussiaRegions
         {
             while (true)
             {
-                var input = Console.ReadLine().ToLower().Trim();
+                var input = Console.ReadLine().ToLower();
                 if (input.Contains('д'))
                 {
                     return true;
