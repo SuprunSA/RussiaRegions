@@ -3,6 +3,6 @@
     enum FileTypes
     {
         Xml,
-        Json,
+        Json
     }
 }

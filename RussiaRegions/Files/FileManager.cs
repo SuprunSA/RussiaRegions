@@ -38,8 +38,8 @@ namespace RussiaRegions
             return extension.ToLower().Trim('.') switch
             {
                 "xml" => FileTypes.Xml,
-                "json" => FileTypes.Json,
-                _ => null,
+                "josn" => FileTypes.Json,
+                _ => null
             };
         }
 

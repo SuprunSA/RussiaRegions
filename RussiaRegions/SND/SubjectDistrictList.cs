@@ -436,7 +436,6 @@ namespace RussiaRegions
             FileSelector.SaveToFile("Список", listDTO);
 
             inputControl.Wait();
-
         }
 
         public void LoadFromFile(InputControl inputControl)
@@ -449,7 +448,6 @@ namespace RussiaRegions
             Console.WriteLine("Загрузка прошла успешно.");
 
             inputControl.Wait();
-
         }
         #endregion
     }
