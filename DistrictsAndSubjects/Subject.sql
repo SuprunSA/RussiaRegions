@@ -9,4 +9,5 @@
 	[District] bigint NOT NULL 
 	foreign key references District(Code) 
 	on delete cascade
+	on update cascade
 )
