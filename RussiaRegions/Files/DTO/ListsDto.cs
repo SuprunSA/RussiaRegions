@@ -17,10 +17,7 @@ namespace RussiaRegions
             Subjects = Map(subjects.ToArray());
         }
         
-        public ListsDTO()
-        {
-
-        }
+        public ListsDTO(){}
 
         public DistrictDTO[] Map(District[] districts)
         {
