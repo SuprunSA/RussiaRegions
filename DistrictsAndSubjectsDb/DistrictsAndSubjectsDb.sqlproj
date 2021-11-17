@@ -6,7 +6,7 @@
     <Name>DistrictsAndSubjectsDb</Name>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectVersion>4.1</ProjectVersion>
-    <ProjectGuid>{db50f7f8-ef91-457b-bdf8-337a8534e489}</ProjectGuid>
+    <ProjectGuid>{e79d6465-59b9-4816-a563-a253ec4c2215}</ProjectGuid>
     <DSP>Microsoft.Data.Tools.Schema.Sql.Sql130DatabaseSchemaProvider</DSP>
     <OutputType>Database</OutputType>
     <RootPath>
@@ -60,9 +60,6 @@
   <ItemGroup>
     <Build Include="District.sql" />
     <Build Include="Subject.sql" />
-  </ItemGroup>
-  <ItemGroup>
-    <RefactorLog Include="DistrictsAndSubjectsDb.refactorlog" />
   </ItemGroup>
   <ItemGroup>
     <None Include="AddValues.sql" />
