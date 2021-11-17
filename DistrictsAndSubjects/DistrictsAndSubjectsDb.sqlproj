@@ -11,8 +11,8 @@
     <OutputType>Database</OutputType>
     <RootPath>
     </RootPath>
-    <RootNamespace>DistrictsAndSubjects</RootNamespace>
-    <AssemblyName>DistrictsAndSubjects</AssemblyName>
+    <RootNamespace>DistrictsAndSubjectsDb</RootNamespace>
+    <AssemblyName>DistrictsAndSubjectsDb</AssemblyName>
     <ModelCollation>1033, CI</ModelCollation>
     <DefaultFileStructure>BySchemaAndSchemaType</DefaultFileStructure>
     <DeployToDatabase>True</DeployToDatabase>
