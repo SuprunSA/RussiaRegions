@@ -190,7 +190,7 @@ namespace RussiaRegions
         {
             Console.Clear();
             inputControl.PrintDistrictList(Districts);
-            var code = inputControl.ReadFederalDistrictCode();
+            var code = inputControl.ReadFederalDistrictCodeToSth();
             if (Districts.Where(d => d.Code == code).Count() == 1)
             {
                 Console.WriteLine("Округ с таким кодом уже существует!");
@@ -204,7 +204,7 @@ namespace RussiaRegions
         void SearchDistrictByCode(InputControl inputControl)
         {
             Console.Clear();
-            var code = inputControl.ReadFederalDistrictCode();
+            var code = inputControl.ReadFederalDistrictCodeToSth();
             var district = Districts.Find(d => d.Code == code);
             if (district == null)
             {
@@ -265,8 +265,8 @@ namespace RussiaRegions
         void RemoveDistrict(District federalDistrict)
         {
             Districts.Remove(federalDistrict);
-            Subjects.RemoveAll(s => s.FederalDistrict.Code == federalDistrict.Code);
             SelectDistrict.SelectedNodeIndex--;
+            Subjects.RemoveAll(s => s.FederalDistrict.Code == federalDistrict.Code);
         }
 
         void CountPopulationDensity()
@@ -304,7 +304,7 @@ namespace RussiaRegions
         {
             Console.Clear();
             inputControl.PrintDistrictList(Districts);
-            var code = inputControl.ReadFederalDistrictCode();
+            var code = inputControl.ReadFederalDistrictCodeToSth();
             var districtToDelete = subject.FederalDistrict;
             if (Districts.Where(d => d.Code == code).Count() == 1)
             {
@@ -348,7 +348,7 @@ namespace RussiaRegions
             AddSubject(new Subject(
                 inputControl.ReadSubjectCode(),
                 inputControl.ReadSubjectName(),
-                inputControl.ReadFederalDistrictName(Districts))
+                inputControl.ReadFederalDistrictCode(Districts))
             {
                 AdminCenterName = inputControl.ReadSubjectAdminCenter(),
                 Population = inputControl.ReadSubjectPopulation(),
