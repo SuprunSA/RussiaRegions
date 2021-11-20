@@ -18,7 +18,7 @@ namespace RussiaRegions
             }
             return code;
         }
-            
+
         public string ReadSubjectName()
         {
             Console.WriteLine("Введите название субъекта: ");
@@ -55,22 +55,10 @@ namespace RussiaRegions
             return square;
         }
 
-        public District ReadFederalDistrictName(List<District> federalDistricts)
+        public string ReadFederalDistrictName()
         {
-            string name;
-            District federalDistrict;
             Console.WriteLine("Введите название федерального округа: ");
-            name = Console.ReadLine().Trim();
-            foreach (var district in federalDistricts)
-            {
-                if (district.Name == name)
-                {
-                    return district;
-                }
-            }
-            federalDistrict = new District(ReadFederalDistrictCode(), name);
-            federalDistricts.Add(federalDistrict);
-            return federalDistrict;
+            return Console.ReadLine().Trim();
         }
 
         public string ReadFederalDistrictNameToSTH()
@@ -79,7 +67,7 @@ namespace RussiaRegions
             return Console.ReadLine().Trim();
         }
 
-        public uint ReadFederalDistrictCode()
+        public uint ReadFederalDistrictCodeToSth()
         {
             uint code;
             Console.WriteLine("Введите код федерального округа: ");
@@ -89,6 +77,22 @@ namespace RussiaRegions
                 Console.WriteLine("Введите код федерального округа: ");
             }
             return code;
+        }
+
+        public District ReadFederalDistrictCode(List<District> districts)
+        {
+            uint code;
+            Console.WriteLine("Введите код федерального округа: ");
+            while (!uint.TryParse(Console.ReadLine().Trim(), out code))
+            {
+                Console.Error.WriteLine("Код - положительное целое число.");
+                Console.WriteLine("Введите код федерального округа: ");
+            }
+            if (districts.Find(d => d.Code == code) != null)
+            {
+                return districts.Find(d => d.Code == code);
+            }
+            else return new District(code, ReadFederalDistrictName());
         }
 
         public void Wait()
