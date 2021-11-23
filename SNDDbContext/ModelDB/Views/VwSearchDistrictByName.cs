@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 #nullable disable
 
-namespace SNDDbContext
+namespace SNDDbContext.ModelDB
 {
     public partial class VwSearchDistrictByName
     {

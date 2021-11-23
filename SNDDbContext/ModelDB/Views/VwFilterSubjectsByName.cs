@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 #nullable disable
 
-namespace SNDDbContext
+namespace SNDDbContext.ModelDB
 {
-    public partial class VwSearchSubjectByName
+    public partial class VwFilterSubjectsByName
     {
         public long Code { get; set; }
         public string Name { get; set; }

@@ -6,7 +6,7 @@ using Microsoft.Extensions.Configuration;
 
 #nullable disable
 
-namespace SNDDbContext
+namespace SNDDbContext.ModelDB
 {
     public partial class DistrictsAndSubjectsDBContext : DbContext
     {

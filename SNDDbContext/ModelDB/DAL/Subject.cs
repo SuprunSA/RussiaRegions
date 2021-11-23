@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 #nullable disable
 
-namespace SNDDbContext
+namespace SNDDbContext.ModelDB
 {
-    public partial class VwFilterSubjectsByName
+    public partial class Subject
     {
         public long Code { get; set; }
         public string Name { get; set; }
@@ -13,5 +13,7 @@ namespace SNDDbContext
         public double Population { get; set; }
         public double Square { get; set; }
         public long District { get; set; }
+
+        public virtual District DistrictNavigation { get; set; }
     }
 }
