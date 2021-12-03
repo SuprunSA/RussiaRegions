@@ -27,7 +27,7 @@ namespace RussiaRegions
                 if (!string.IsNullOrEmpty(subjectSearchBy))
                 {
                     subjects = subjects.Where(subject =>
-                        subject.FederalDistrict.Name.ToLower().Contains(SubjectSearchBy)
+                        subject.District.Name.ToLower().Contains(SubjectSearchBy)
                     ).ToList();
                 }
                 if (!SubjectOrderByDescending)
@@ -55,9 +55,7 @@ namespace RussiaRegions
 
             new TableColumn<Subject>("Плотность населения", 28, subject => string.Format("{0:# ##0.000} тыс. чел. / кв. км.", subject.PopulationDencity)),
 
-            new TableColumn<Subject>("Название округа", 17, subject => subject.FederalDistrict.Name),
-
-            new TableColumn<Subject>("Код округа", 12, subject => subject.FederalDistrict.Code.ToString())
+            new TableColumn<Subject>("Код округа", 12, subject => subject.District.Code.ToString())
         });
 
         public List<District> Districts = new List<District>();
@@ -254,9 +252,9 @@ namespace RussiaRegions
             var name = inputControl.ReadFederalDistrictNameToSTH();
             foreach (var subject in Subjects)
             {
-                if (subject.FederalDistrict.Code == federalDistrict.Code)
+                if (subject.District.Code == federalDistrict.Code)
                 {
-                    subject.FederalDistrict.Name = name;
+                    subject.District.Name = name;
                 }
             }
             Districts.Find(d => d.Code == federalDistrict.Code).Name = name;
@@ -266,7 +264,7 @@ namespace RussiaRegions
         {
             Districts.Remove(federalDistrict);
             SelectDistrict.SelectedNodeIndex--;
-            Subjects.RemoveAll(s => s.FederalDistrict.Code == federalDistrict.Code);
+            Subjects.RemoveAll(s => s.District.Code == federalDistrict.Code);
         }
 
         void CountPopulationDensity()
@@ -277,7 +275,7 @@ namespace RussiaRegions
                 var square = 0.0;
                 foreach (var subject in Subjects)
                 {
-                    if (subject.FederalDistrict.Code == district.Code)
+                    if (subject.District.Code == district.Code)
                     {
                         population += subject.Population;
                         square += subject.Square;
@@ -305,15 +303,15 @@ namespace RussiaRegions
             Console.Clear();
             inputControl.PrintDistrictList(Districts);
             var code = inputControl.ReadFederalDistrictCodeToSth();
-            var districtToDelete = subject.FederalDistrict;
+            var districtToDelete = subject.District;
             if (Districts.Where(d => d.Code == code).Count() == 1)
             {
-                Subjects.Find(s => s == subject).FederalDistrict = Districts.Find(d => d.Code == code);
+                Subjects.Find(s => s == subject).District = Districts.Find(d => d.Code == code);
             }
             else
             {
                 var district = new District(code, inputControl.ReadFederalDistrictNameToSTH());
-                Subjects.Find(s => s == subject).FederalDistrict = district;
+                Subjects.Find(s => s == subject).District = district;
                 Districts.Add(district);
             }
         }

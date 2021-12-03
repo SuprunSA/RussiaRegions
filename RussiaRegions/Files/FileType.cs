@@ -1,6 +1,6 @@
 ﻿namespace RussiaRegions
 {
-    enum FileTypes
+    enum FileType
     {
         Xml,
         Json

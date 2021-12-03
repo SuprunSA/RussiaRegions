@@ -25,19 +25,19 @@ namespace RussiaRegions
             }
         }
 
-        public static FileTypes ReadFileType()
+        public static FileType ReadFileType()
         {
             Console.WriteLine("Введите тип файла(xml/json): ");
             while (true)
             {
                 var input = Console.ReadLine().ToLower().Trim();
-                FileTypes? fileType = FileManager.GetFileType(input);
+                FileType? fileType = FileManager.GetFileType(input);
                 if (fileType == null)
                 {
                     Console.Write("Пожалуйста, введите \"xml\" или \"json\" (без кавычек): ");
                     continue;
                 }
-                return (FileTypes)fileType;
+                return (FileType)fileType;
             }
         }
 
@@ -52,6 +52,7 @@ namespace RussiaRegions
                 if (File.Exists(fileName))
                 {
                     Console.Write("Указанный файл существует. Перезаписать? (да/нет)");
+                    Console.WriteLine();
                     if (!ReadYN())
                     {
                         continue;

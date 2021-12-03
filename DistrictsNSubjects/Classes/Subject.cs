@@ -12,13 +12,13 @@ namespace DistrictsNSubjects
         public double Population { get; set; }
         public double Square { get; set; }
         public double PopulationDencity { get => Population / Square; set => Math.Round(value, 3); }
-        public District FederalDistrict { get; set; }
+        public District District { get; set; }
 
         public Subject(uint code, string subjectName, District federalDistrict)
         {
             Code = code;
             Name = subjectName;
-            FederalDistrict = federalDistrict;
+            District = federalDistrict;
         }
 
         public override string ToString()
@@ -30,7 +30,7 @@ namespace DistrictsNSubjects
             sb.Append(string.Format("Население: {0:# ##0.000} тыс. чел.\n", Population));
             sb.Append(string.Format("Площадь: {0:# ##0.00} кв. м.\n", Square));
             sb.Append(string.Format("Плотность населения: {0:# ##0.000} тыс. чел. / кв. км.\n", PopulationDencity));
-            sb.Append(string.Format("Федеральный округ: {0}\n", FederalDistrict.Name));
+            sb.Append(string.Format("Федеральный округ: {0}\n", District.Name));
             return sb.ToString();
         }
     }

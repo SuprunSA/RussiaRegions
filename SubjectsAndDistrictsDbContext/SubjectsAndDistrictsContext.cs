@@ -9,7 +9,7 @@ using System.Text;
 
 namespace SubjectsAndDistrictsDbContext
 {
-    class SubjectsAndDistrictsContext : DbContext
+    public class SubjectsAndDistrictsContext : DbContext
     {
         public SubjectsAndDistrictsContext() : base() { }
 

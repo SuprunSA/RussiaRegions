@@ -2,15 +2,17 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SubjectsAndDistrictsDbContext;
 
 namespace SubjectsAndDistrictsDbContext.Migrations
 {
     [DbContext(typeof(SubjectsAndDistrictsContext))]
-    partial class SubjectsAndDistrictsContextModelSnapshot : ModelSnapshot
+    [Migration("20211203183300_OnDelete")]
+    partial class OnDelete
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

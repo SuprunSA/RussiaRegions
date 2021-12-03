@@ -6,7 +6,6 @@ using System.Text;
 
 namespace SubjectsAndDistrictsDbContext.Model.DTO
 {
-    [Table("Subject")]
     public class SubjectDbDTO
     {
         public uint Code { get; set; }

@@ -12,6 +12,9 @@ namespace SubjectsAndDistrictsDbContext.Model.Configuration
         public void Configure(EntityTypeBuilder<SubjectDbDTO> builder)
         {
             builder
+                .ToTable("Subject");
+
+            builder
                 .HasKey("Code");
 
             builder
@@ -48,7 +51,8 @@ namespace SubjectsAndDistrictsDbContext.Model.Configuration
                 .HasOne(s => s.District)
                 .WithMany(d => d.Subjects)
                 .HasForeignKey("district_code")
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

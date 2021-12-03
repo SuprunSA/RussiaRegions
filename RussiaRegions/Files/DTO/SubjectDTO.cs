@@ -23,7 +23,7 @@ namespace RussiaRegions
                 AdminCenterName = subject.AdminCenterName,
                 Population = subject.Population,
                 Square = subject.Square,
-                FederalDistrictCode = subject.FederalDistrict.Code
+                FederalDistrictCode = subject.District.Code
             };
         }
 

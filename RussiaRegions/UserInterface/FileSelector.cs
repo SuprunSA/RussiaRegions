@@ -11,15 +11,15 @@ namespace RussiaRegions
             Console.Clear();
             Console.WriteLine("{0}: сохранение в файл", title);
             string fileName = FileControl.ReadPathToSave();
-            FileTypes fileTypes = FileControl.ReadFileType();
+            FileType fileTypes = FileControl.ReadFileType();
             try
             {
                 switch (fileTypes)
                 {
-                    case FileTypes.Json: 
+                    case FileType.Json: 
                         FileManager.SaveToJson(fileName, data);
                         break;
-                    case FileTypes.Xml:
+                    case FileType.Xml:
                         FileManager.SaveToXml(fileName, data);
                         break;
                 }
@@ -41,14 +41,14 @@ namespace RussiaRegions
                 return default;
             }
             string fileName = FileControl.ReadPathToLoad();
-            FileTypes? fileTypes = FileManager.CheckFileType(fileName);
+            FileType? fileTypes = FileManager.CheckFileType(fileName);
             ListsDTO data = default;
             try
             {
                 data = fileTypes switch
                 {
-                    FileTypes.Xml => FileManager.LoadFromXml(fileName),
-                    FileTypes.Json => FileManager.LoadFromJson(fileName),
+                    FileType.Xml => FileManager.LoadFromXml(fileName),
+                    FileType.Json => FileManager.LoadFromJson(fileName),
                     _ => throw new InvalidOperationException("Формат файла не распознан. Используйте XML или JSON."),
                 };
             }

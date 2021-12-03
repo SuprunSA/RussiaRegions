@@ -7,7 +7,7 @@ using System.Text;
 
 namespace SubjectsAndDistrictsDbContext.Connection
 {
-    class ConnectionStringConfig
+    public class ConnectionStringConfig
     {
         public string ConnectionString { get; set; }
 

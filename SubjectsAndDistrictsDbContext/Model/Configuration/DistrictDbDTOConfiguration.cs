@@ -13,6 +13,9 @@ namespace SubjectsAndDistrictsDbContext.Model.Configuration
         public void Configure(EntityTypeBuilder<DistrictDbDTO> builder)
         {
             builder
+                .ToTable("District");
+
+            builder
                 .HasKey("Code");
 
             builder

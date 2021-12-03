@@ -33,17 +33,17 @@ namespace RussiaRegions
             return (ListsDTO)serializer.Deserialize(fs);
         }
 
-        public static FileTypes? GetFileType(string extension)
+        public static FileType? GetFileType(string extension)
         {
             return extension.ToLower().Trim('.') switch
             {
-                "xml" => FileTypes.Xml,
-                "josn" => FileTypes.Json,
+                "xml" => FileType.Xml,
+                "json" => FileType.Json,
                 _ => null
             };
         }
 
-        public static FileTypes? CheckFileType(string fileName)
+        public static FileType? CheckFileType(string fileName)
         {
             return GetFileType(Path.GetExtension(fileName));
         }

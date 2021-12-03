@@ -92,7 +92,12 @@ namespace RussiaRegions
             {
                 return districts.Find(d => d.Code == code);
             }
-            else return new District(code, ReadFederalDistrictName());
+            else 
+            { 
+                var district = new District(code, ReadFederalDistrictName());
+                districts.Add(district);
+                return district;
+            }
         }
 
         public void Wait()
