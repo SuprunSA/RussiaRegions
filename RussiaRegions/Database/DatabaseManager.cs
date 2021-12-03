@@ -75,7 +75,7 @@ namespace RussiaRegions.Database
                                                                     .ToList();
 
                             distToUpdate.Subjects = subjectsToUpdate;
-                            context.Update(DistrictMap.Map(district));
+                            context.Update(distToUpdate);
                         }
                         else context.Remove(districtInDatabase);
                     }
