@@ -25,6 +25,7 @@ namespace RussiaRegions.Database.Mapping
             {
                 Code = subject.Code,
                 Name = subject.Name,
+                District = DistrictMap.Map(subject.District),
                 AdminCenterName = subject.AdminCenterName,
                 Square = subject.Square,
                 Population = subject.Population,
