@@ -50,7 +50,7 @@ namespace SubjectsAndDistrictsDbContext.Model.Configuration
             builder
                 .HasOne(s => s.District)
                 .WithMany(d => d.Subjects)
-                .HasForeignKey("district_code")
+                .HasForeignKey("DistrictId")
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Cascade);
         }

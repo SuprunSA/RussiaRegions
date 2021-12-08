@@ -28,7 +28,8 @@ namespace RussiaRegions.Database.Mapping
                 District = DistrictMap.Map(subject.District),
                 AdminCenterName = subject.AdminCenterName,
                 Square = subject.Square,
-                Population = subject.Population
+                Population = subject.Population,
+                DistrictId = subject.District.Code
             };
         }
     }
