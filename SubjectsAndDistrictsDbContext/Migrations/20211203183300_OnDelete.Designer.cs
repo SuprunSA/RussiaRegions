@@ -9,8 +9,8 @@ using SubjectsAndDistrictsDbContext;
 namespace SubjectsAndDistrictsDbContext.Migrations
 {
     [DbContext(typeof(SubjectsAndDistrictsContext))]
-    [Migration("20211208085456_PropertyId")]
-    partial class PropertyId
+    [Migration("20211203183300_OnDelete")]
+    partial class OnDelete
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -51,9 +51,6 @@ namespace SubjectsAndDistrictsDbContext.Migrations
                         .HasColumnType("nvarchar(50)")
                         .HasColumnName("admin_center_name");
 
-                    b.Property<long>("DistrictId")
-                        .HasColumnType("bigint");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(50)")
@@ -67,9 +64,12 @@ namespace SubjectsAndDistrictsDbContext.Migrations
                         .HasColumnType("float(53)")
                         .HasColumnName("square");
 
+                    b.Property<long>("district_code")
+                        .HasColumnType("bigint");
+
                     b.HasKey("Code");
 
-                    b.HasIndex("DistrictId");
+                    b.HasIndex("district_code");
 
                     b.ToTable("Subject");
                 });
@@ -78,7 +78,7 @@ namespace SubjectsAndDistrictsDbContext.Migrations
                 {
                     b.HasOne("SubjectsAndDistrictsDbContext.Model.DTO.DistrictDbDTO", "District")
                         .WithMany("Subjects")
-                        .HasForeignKey("DistrictId")
+                        .HasForeignKey("district_code")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

@@ -56,6 +56,7 @@ namespace RussiaRegions.Database
                 using var transaction = context.Database.BeginTransaction();
                 try
                 {
+
                     var districtsInDatabase = context
                                                 .Districts
                                                 .AsNoTracking();
@@ -67,14 +68,14 @@ namespace RussiaRegions.Database
 
                         if (district != null)
                         {
-                            var districtToUpdate = DistrictMap.Map(district);
-                            var subjectsToUpdate = subjects
-                                                       .Where(s => s.District.Code == district.Code)
-                                                       .Select(s => SubjectMap.Map(s))
-                                                       .ToList();
+                            var distToUpdate = DistrictMap.Map(district);
+                            List<SubjectDbDTO> subjectsToUpdate = subjects
+                                                                    .Where(s => s.District.Code == district.Code)
+                                                                    .Select(s => SubjectMap.Map(s))
+                                                                    .ToList();
 
-                            districtToUpdate.Subjects = subjectsToUpdate;
-                            context.Update(districtToUpdate);
+                            distToUpdate.Subjects = subjectsToUpdate;
+                            context.Update(distToUpdate);
                         }
                         else context.Remove(districtInDatabase);
                     }

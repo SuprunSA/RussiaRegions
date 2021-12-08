@@ -13,7 +13,6 @@ namespace SubjectsAndDistrictsDbContext.Model.DTO
         public string AdminCenterName { get; set; }
         public double Population { get; set; }
         public double Square { get; set; }
-        public uint DistrictId { get; set; }
 
         public DistrictDbDTO District { get; set; }
 
