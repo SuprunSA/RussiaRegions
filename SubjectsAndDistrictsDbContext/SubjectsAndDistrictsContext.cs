@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using SubjectsAndDistrictsDbContext.Connection;
 using SubjectsAndDistrictsDbContext.Model.Configuration;
 using SubjectsAndDistrictsDbContext.Model.DTO;
@@ -9,7 +10,7 @@ using System.Text;
 
 namespace SubjectsAndDistrictsDbContext
 {
-    public class SubjectsAndDistrictsContext : DbContext
+    public class SubjectsAndDistrictsContext : IdentityDbContext<UserDbDTO>
     {
         public SubjectsAndDistrictsContext() : base() { }
 
@@ -28,6 +29,7 @@ namespace SubjectsAndDistrictsDbContext
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfiguration(new DistrictDbDTOConfiguration());
             modelBuilder.ApplyConfiguration(new SubjectDbDTOConfiguration());
         }

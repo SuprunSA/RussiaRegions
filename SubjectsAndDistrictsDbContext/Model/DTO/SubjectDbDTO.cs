@@ -16,6 +16,5 @@ namespace SubjectsAndDistrictsDbContext.Model.DTO
         public uint DistrictId { get; set; }
 
         public DistrictDbDTO District { get; set; }
-
     }
 }

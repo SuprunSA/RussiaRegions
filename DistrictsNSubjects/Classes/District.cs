@@ -8,6 +8,8 @@ namespace DistrictsNSubjects
     {
         public uint Code { get; set; }
         public string Name { get; set; }
+        public double Population { get; set; } = 0;
+        public double Square { get; set; } = 0;
         public double PopulationDencity { get; set; } = 0;
         public District(uint code, string name)
         {

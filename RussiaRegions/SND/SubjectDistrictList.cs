@@ -63,9 +63,10 @@ namespace RussiaRegions
         public Menu DistrictMenu;
         readonly Menu DistrictDescMenu;
         readonly Menu DistrictChangeMenu;
+        readonly Menu DistrictSortMenu;
         public ListSelector<District> SelectDistrict { get; }
         public District SelectedDistrict => SelectDistrict.SelectedNode;
-        Func<District, object> DistrictOrderBy = district => district.PopulationDencity;
+        Func<District, object> DistrictOrderBy = district => district.Population;
         public bool DistrictOrderByDescending = false;
         IList<District> OrderedDistricts
         {
@@ -89,6 +90,10 @@ namespace RussiaRegions
 
                     new TableColumn<District>("Код ОКЭР", 10, district => district.Code.ToString()),
 
+                    new TableColumn<District>("Население", 25, district => string.Format("{0:# ##0.000} тыс.чел.", district.Population)),
+
+                    new TableColumn<District>("Площадь", 20, district => string.Format("{0:# ##0.000} тыс.чел.", district.Square)),
+
                     new TableColumn<District>("Плотность населения", 28, district => string.Format("{0:# ##0.000} тыс. чел. / кв. км.", district.PopulationDencity.ToString()))
                 });
 
@@ -105,7 +110,7 @@ namespace RussiaRegions
 
                 new MenuAction(ConsoleKey.F3, "Изменение субъекта", ChangeSubject),
 
-                new MenuAction(ConsoleKey.F4, "Сортировать", ChooseSort),
+                new MenuAction(ConsoleKey.F4, "Сортировать", ChooseSubjectSort),
 
                 new MenuAction(ConsoleKey.F5, "Фильтр по федеральным округам", DistrictFilter),
 
@@ -162,7 +167,7 @@ namespace RussiaRegions
 
                 new MenuAction(ConsoleKey.F3, "Изменение округа", ChangeDistrict),
 
-                new MenuAction(ConsoleKey.F4, "Сортировать по плотности населения", PopulationDencitySort),
+                new MenuAction(ConsoleKey.F4, "Сортировать", ChooseDistrictSort),
 
                 new MenuAction(ConsoleKey.F5, "Поиск по названию", () => SearchDistrictByName(inputControl)),
 
@@ -181,9 +186,36 @@ namespace RussiaRegions
 
                 new MenuClose(ConsoleKey.Escape, "Выход")
             });
+            DistrictSortMenu = new Menu(new List<MenuItem>(SelectDistrict.Menu.Items)
+            {
+                new MenuAction(ConsoleKey.D1, "Сортировка по численности наcеления",
+                    () => DistrictOrderBy = district => district.Population),
+
+                new MenuAction(ConsoleKey.D2, "Сортировка по площади",
+                    () => DistrictOrderBy = district => district.Square),
+
+                new MenuAction(ConsoleKey.D3, "Сортировка по плотности населения",
+                    () => DistrictOrderBy = district => district.PopulationDencity),
+
+                new MenuClose(ConsoleKey.Escape, "Выход")
+            });
         }
 
         #region Districts
+        void ChooseDistrictSort()
+        {
+            Console.Clear();
+            DistrictSortMenu.Print();
+            PrintAllDistricts();
+            var key = Console.ReadKey().Key;
+            if (key == ConsoleKey.Escape)
+            {
+                return;
+            }
+            DistrictSortMenu.Action(key);
+            SwitchDistrictDesc();
+        }
+
         void AddDistrict(InputControl inputControl)
         {
             Console.Clear();
@@ -231,13 +263,6 @@ namespace RussiaRegions
             }
         }
 
-        void PopulationDencitySort()
-        {
-            Console.Clear();
-            DistrictDescMenu.Print();
-            DistrictDescMenu.Action(Console.ReadKey().Key);
-        }
-
         void ChangeDistrict()
         {
             Console.Clear();
@@ -283,9 +308,13 @@ namespace RussiaRegions
                 }
                 if (population == 0.0)
                 {
-                    district.PopulationDencity = 0;
+                    district.Population = 0.0;
+                    district.Square = 0.0;
+                    district.PopulationDencity = 0.0;
                     continue;
                 }
+                district.Population = population;
+                district.Square = square;
                 district.PopulationDencity = Math.Round(population / square, 3);
             }
         }
@@ -294,6 +323,14 @@ namespace RussiaRegions
         {
             CountPopulationDensity();
             districtTable.Print(OrderedDistricts, SelectedDistrict);
+        }
+
+        public void SwitchDistrictDesc()
+        {
+            Console.Clear();
+            DistrictDescMenu.Print();
+            PrintAllDistricts();
+            DistrictDescMenu.Action(Console.ReadKey().Key);
         }
         #endregion
 
@@ -369,7 +406,7 @@ namespace RussiaRegions
             SubjectChangeMenu.Action(Console.ReadKey().Key);
         }
 
-        void ChooseSort()
+        void ChooseSubjectSort()
         {
             Console.Clear();
             SubjectSortMenu.Print();
@@ -380,7 +417,7 @@ namespace RussiaRegions
                 return;
             }
             SubjectSortMenu.Action(key);
-            SwitchDesc();
+            SwitchSubjectDesc();
         }
 
         void DistrictFilter()
@@ -413,10 +450,11 @@ namespace RussiaRegions
             Subjects.Add(subject);
         }
 
-        void SwitchDesc()
+        void SwitchSubjectDesc()
         {
             Console.Clear();
             SubjectSortDescMenu.Print();
+            PrintAllSubjects();
             SubjectSortDescMenu.Action(Console.ReadKey().Key);
         }
 
