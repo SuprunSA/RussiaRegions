@@ -34,7 +34,11 @@ namespace SubjectsAndDistrictsWebApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<SubjectsAndDistrictsContext>(options =>
-                options.UseSqlServer(new ConnectionStringConfig().ConnectionString));
+                options.UseSqlServer(string.Format(Configuration.GetConnectionString("SaConnection"), 
+                        Configuration["SNDDb:Server"], 
+                        Configuration["SNDDb:UserId"], 
+                        Configuration["SNDDb:Password"])
+                        ?? Environment.GetEnvironmentVariable("SNDDb_ConnectionString")));
 
             services.AddIdentity<UserDbDTO, IdentityRole>(options =>
             {

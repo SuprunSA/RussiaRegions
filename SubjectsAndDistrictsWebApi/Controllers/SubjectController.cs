@@ -13,11 +13,11 @@ namespace SubjectsAndDistrictsWebApi.Controllers
     [Authorize(Roles = "Admin")]
     [Route("api/[controller]")]
     [ApiController]
-    public class SubjcetController : ControllerBase
+    public class SubjectController : ControllerBase
     {
         SubjectsService subjectService;
 
-        public SubjcetController(SubjectsService subjectService)
+        public SubjectController(SubjectsService subjectService)
         {
             this.subjectService = subjectService;
         }
