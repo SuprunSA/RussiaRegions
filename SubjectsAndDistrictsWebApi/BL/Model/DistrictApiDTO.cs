@@ -10,10 +10,49 @@ namespace SubjectsAndDistrictsWebApi.BL.Model
     {
         public uint Code { get; set; }
         public string Name { get; set; }
-        public IEnumerable<SubjectApiDTO> Subjects { get; set; }
-        public double Population => Math.Round(Subjects.Sum(s => s.Population), 3);
-        public double Square => Math.Round(Subjects.Sum(s => s.Square), 3);
-        public double PopulationDencity => Math.Round(Population / Square, 3);
+        public IEnumerable<SubjectApiDTO>? Subjects { get; set; }
+        public double Population { 
+            get
+            {
+                if (Subjects != null)
+                {
+                    return Subjects.Sum(s => s.Population);
+                }
+                else return 0;
+            }
+            set
+            {
+                Math.Round(value, 3);
+            }
+        }
+        public double Square {
+            get 
+            {
+                if (Subjects != null)
+                {
+                    return Subjects.Sum(s => s.Square);
+                }
+                else return 0;
+            } 
+            set
+            {
+                Math.Round(value, 3);
+            }
+        }
+        public double PopulationDencity { 
+            get 
+            {
+                if (Population != 0)
+                {
+                    return Population / Square;
+                }
+                else return 0;
+            }
+            set
+            {
+                Math.Round(value, 0);
+            }
+        } 
 
         public DistrictApiDTO() { }
 

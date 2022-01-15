@@ -39,7 +39,7 @@ namespace SubjectsAndDistrictsWebApi.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult<Exception>> Put([FromBody] SubjectApiDTO subject)
+        public async Task<ActionResult<Exception>> Put([FromForm] SubjectApiDTO subject)
         {
             var ex = await subjectService.UpdateAsync(subject);
             if (ex != null)
@@ -52,7 +52,7 @@ namespace SubjectsAndDistrictsWebApi.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Exception>> Post([FromBody] SubjectApiDTO subject)
+        public async Task<ActionResult<Exception>> Post([FromForm] SubjectApiDTO subject)
         {
             var ex = await subjectService.CreateAsync(subject);
             if (ex != null)
@@ -65,7 +65,7 @@ namespace SubjectsAndDistrictsWebApi.Controllers
         }
 
         [HttpDelete]
-        public async Task<ActionResult<Exception>> Delete([FromBody] SubjectApiDTO subject)
+        public async Task<ActionResult<Exception>> Delete([FromForm] SubjectApiDTO subject)
         {
             var ex = await subjectService.DeleteAsync(subject.Create());
             if (ex != null)

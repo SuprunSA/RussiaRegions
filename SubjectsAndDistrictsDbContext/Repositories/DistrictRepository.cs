@@ -32,7 +32,7 @@ namespace SubjectsAndDistrictsDbContext.Repositories
                 }
             }
             
-            return await districts.Include(d => d.Subjects).ToListAsync();
+            return await districts.ToListAsync();
         }
 
         public async Task<DistrictDbDTO> GetDistrictAsync(uint code)
@@ -52,7 +52,7 @@ namespace SubjectsAndDistrictsDbContext.Repositories
 
         private static IQueryable<DistrictDbDTO> DistrictsOrderByPopulationDencity(bool orderAsc, IQueryable<DistrictDbDTO> districts)
         {
-            return DistrictsOrderBy(orderAsc, districts, d => d.Subjects.Sum(s => s.Population) / d.Subjects.Sum(s => s.Square));
+            return DistrictsOrderBy(orderAsc, districts, d => d.Subjects.Count == 0 ? 0 : d.Subjects.Sum(s => s.Population) / d.Subjects.Sum(s => s.Square));
         }
 
         private static IQueryable<DistrictDbDTO> DistrictsOrderBy<TKey>(bool orderAsc, IQueryable<DistrictDbDTO> districts, Expression<Func<DistrictDbDTO, TKey>> expression)

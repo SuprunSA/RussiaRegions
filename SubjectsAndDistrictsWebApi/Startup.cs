@@ -33,12 +33,14 @@ namespace SubjectsAndDistrictsWebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<SubjectsAndDistrictsContext>(options =>
-                options.UseSqlServer(string.Format(Configuration.GetConnectionString("SaConnection"), 
-                        Configuration["SNDDb:Server"], 
-                        Configuration["SNDDb:UserId"], 
+            var connStr = string.Format(Configuration.GetConnectionString("SaConnection"),
+                        Configuration["SNDDb:Server"],
+                        Configuration["SNDDb:UserId"],
                         Configuration["SNDDb:Password"])
-                        ?? Environment.GetEnvironmentVariable("SNDDb_ConnectionString")));
+                        ?? Environment.GetEnvironmentVariable("SNDDb_ConnectionString");
+
+            services.AddDbContext<SubjectsAndDistrictsContext>(options =>
+                options.UseSqlServer(connStr));
 
             services.AddIdentity<UserDbDTO, IdentityRole>(options =>
             {

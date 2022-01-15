@@ -43,7 +43,7 @@ namespace SubjectsAndDistrictsWebApi.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult> Put([FromBody] DistrictApiDTO district)
+        public async Task<ActionResult> Put([FromForm] DistrictApiDTO district)
         {
             var ex = await districtService.UpdateAsync(district);
             if (ex != null)
@@ -56,7 +56,7 @@ namespace SubjectsAndDistrictsWebApi.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Post([FromBody] DistrictApiDTO district)
+        public async Task<ActionResult> Post([FromForm] DistrictApiDTO district)
         {
             var ex = await districtService.CreateAsync(district);
             if (ex != null)
@@ -69,7 +69,7 @@ namespace SubjectsAndDistrictsWebApi.Controllers
         }
 
         [HttpDelete]
-        public async Task<ActionResult> Delete([FromBody] DistrictApiDTO district)
+        public async Task<ActionResult> Delete([FromForm] DistrictApiDTO district)
         {
             var ex = await districtService.DeleteAsync(district.Create());
             if (ex != null)

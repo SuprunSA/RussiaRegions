@@ -52,14 +52,14 @@ namespace SubjectsAndDistrictsWebApi.BL.Services
         public async Task<Exception> DeleteAsync(uint code)
         {
             var district = await districtRepository.GetDistrictAsync(code);
-            if (district == null) return new KeyNotFoundException(string.Format("Округаtr    с кодом {0} не найдено", code));
+            if (district == null) return new KeyNotFoundException(string.Format("Округа с кодом {0} не найдено", code));
 
             return await DeleteAsync(district);
         }
 
         public async Task<Exception> DeleteAsync(DistrictDbDTO district)
         {
-            if (await districtRepository.DistrictExists(district.Code)) return new KeyNotFoundException();
+            if (!await districtRepository.DistrictExists(district.Code)) return new KeyNotFoundException();
 
             districtRepository.Delete(district);
             try

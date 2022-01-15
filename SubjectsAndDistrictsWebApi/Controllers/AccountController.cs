@@ -30,13 +30,14 @@ namespace SubjectsAndDistrictsWebApi.Controllers
 
         [AllowAnonymous]
         [HttpPost("login")]
-        public async Task<ActionResult> Login([FromBody] LoginRequest request)
+        public async Task<ActionResult> Login([FromForm] LoginRequest request)
         {
             var result = await signInManager.PasswordSignInAsync(request.UserName, request.Password, request.RememberMe, lockoutOnFailure: false);
             if (!result.Succeeded) return StatusCode(401);
             else return StatusCode(200);
         }
 
+        [Authorize]
         [HttpPost("logout")]
         public async Task Logout()
         {
