@@ -14,7 +14,6 @@ using System.Threading.Tasks;
 
 namespace SubjectsAndDistrictsWebApi.Controllers
 {
-    [AllowAnonymous]
     [Route("api/[controller]")]
     [ApiController]
     public class AccountController : ControllerBase
@@ -30,7 +29,7 @@ namespace SubjectsAndDistrictsWebApi.Controllers
 
         [AllowAnonymous]
         [HttpPost("login")]
-        public async Task<ActionResult> Login([FromForm] LoginRequest request)
+        public async Task<ActionResult> Login([FromBody] LoginRequest request)
         {
             var result = await signInManager.PasswordSignInAsync(request.UserName, request.Password, request.RememberMe, lockoutOnFailure: false);
             if (!result.Succeeded) return StatusCode(401);
@@ -55,7 +54,8 @@ namespace SubjectsAndDistrictsWebApi.Controllers
                 Email = identity.FindFirst(ClaimTypes.Email)?.Value,
                 FirstName = identity.FindFirst("FirstName")?.Value,
                 MiddleName = identity.FindFirst("MiddleName")?.Value,
-                LastName = identity.FindFirst("LastName")?.Value
+                LastName = identity.FindFirst("LastName")?.Value,
+                Roles = identity.FindFirst(ClaimTypes.Role)?.Value.Split(", "),
             };
         }
 
@@ -69,9 +69,9 @@ namespace SubjectsAndDistrictsWebApi.Controllers
 
         [Authorize]
         [HttpPost("password")]
-        public async Task<ActionResult<Exception>> ResetPassword([FromForm] string password)
+        public async Task<ActionResult<Exception>> ResetPassword([FromBody] Password password)
         {
-            var ex = await userService.ResetPassword(HttpContext.User.Identity.Name, password);
+            var ex = await userService.ResetPassword(HttpContext.User.Identity.Name, password.Pass);
             if (ex != null)
             {
                 if (ex is KeyNotFoundException) return StatusCode(404, ex.Message);
@@ -92,6 +92,8 @@ namespace SubjectsAndDistrictsWebApi.Controllers
                 if (ex is SaveChangesException) return StatusCode(500, ex.Message);
                 return StatusCode(400, ex.Message);
             }
+            var profile = await signInManager.UserManager.GetUserAsync(HttpContext.User);
+            await signInManager.RefreshSignInAsync(profile);    
             return StatusCode(200);
         }
     }

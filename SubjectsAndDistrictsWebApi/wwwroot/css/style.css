@@ -1,0 +1,29 @@
+body {
+    background: linear-gradient(to bottom, white, rgb(252, 253, 197))
+}
+
+header {
+    position: relative;
+}
+
+main {
+    min-height: 55em;
+}
+
+header {
+    padding: 0.3em;
+    background-color: rgb(255, 187, 0);
+    display: grid;
+}
+
+.high {
+    line-height: 1.6em;
+}
+
+.gap {
+    gap: 0.2em;
+}
+
+.hidden {
+    display: none;
+}

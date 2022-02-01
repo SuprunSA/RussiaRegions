@@ -13,10 +13,10 @@ namespace SubjectsAndDistrictsDbContext.Repositories
     {
         public DistrictRepository(SubjectsAndDistrictsContext context) : base(context) { }
 
-        public async Task<IEnumerable<DistrictDbDTO>> GetAllDistrictsAsync(bool orderAsc, string? orderBy)
+        public async Task<IEnumerable<DistrictDbDTO>> GetAllDistrictsAsync(bool orderAsc, string? orderBy, bool order)
         {
             var districts = context.Districts.Include(d => d.Subjects).AsQueryable();
-            if (!string.IsNullOrEmpty(orderBy))
+            if (!string.IsNullOrEmpty(orderBy) && order)
             {
                 switch (orderBy)
                 {
@@ -38,6 +38,11 @@ namespace SubjectsAndDistrictsDbContext.Repositories
         public async Task<DistrictDbDTO> GetDistrictAsync(uint code)
         {
             return await context.Districts.Include(d => d.Subjects).FirstOrDefaultAsync(d => d.Code == code);
+        }
+
+        public async Task<DistrictDbDTO> GetDistrictAsync(string name)
+        {
+            return await context.Districts.Include(d => d.Subjects).FirstOrDefaultAsync(d => d.Name == name);
         }
 
         private static IQueryable<DistrictDbDTO> DistrictsOrderByPopulation(bool orderAsc, IQueryable<DistrictDbDTO> districts)
@@ -66,8 +71,10 @@ namespace SubjectsAndDistrictsDbContext.Repositories
             context.Add(district);
         }
 
-        public void Update(DistrictDbDTO district)
+        public void Update(uint code, string name)
         {
+            var district = context.Districts.Find(code);
+            district.Name = name;
             context.Update(district);
         }
 

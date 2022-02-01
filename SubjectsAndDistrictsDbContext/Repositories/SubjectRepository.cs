@@ -13,33 +13,36 @@ namespace SubjectsAndDistrictsDbContext.Repositories
     {
         public SubjectRepository(SubjectsAndDistrictsContext context) : base(context) { }
 
-        public async Task<IEnumerable<SubjectDbDTO>> GetAllSubjectsAsync(string? filter, bool orderAsc, string? orderBy)
+        public async Task<IEnumerable<SubjectDbDTO>> GetAllSubjectsAsync(string? filter, bool orderAsc, string? orderBy, bool order)
         {
             var subjects = context.Subjects.AsQueryable();
             if (!string.IsNullOrEmpty(filter))
             {
                 subjects = subjects
-                                .Where(s => EF.Functions.Like(s.Code.ToString(), $"%{filter}%")
-                                         || EF.Functions.Like(s.Name, $"%{filter}%"));;
+                                .Where(s => EF.Functions.Like(s.Name, $"%{filter}%")); 
             }
 
-            if (!string.IsNullOrEmpty(orderBy))
+            if (!string.IsNullOrEmpty(orderBy) && order)
             {
-                switch (orderBy)
-                {
-                    case "population":
-                        subjects = SubjectsOrderByPopulation(orderAsc, subjects);
-                        break;
-                    case "square":
-                        subjects = SubjectsOrderBySquare(orderAsc, subjects);
-                        break;
-                    case "populationDencity":
-                        subjects = SubjectsOrderByPopulationDencity(orderAsc, subjects);
-                        break;
-                }
+                subjects = OrderSubjects(orderBy, orderAsc, subjects);
             }
 
             return await subjects.Include(s => s.District).ToListAsync();
+        }
+        public async Task<IEnumerable<SubjectDbDTO>> FilterSubjectsAsync(string name, string? orderBy, bool orderAsc, bool order)
+        {
+            var subjects = context.Subjects.AsQueryable();
+            subjects = subjects.Where(s => s.District.Name == name);
+            if (!string.IsNullOrEmpty(orderBy) && order)
+            {
+                subjects = OrderSubjects(orderBy, orderAsc, subjects);
+            }
+            return await subjects.Include(s => s.District).ToListAsync();
+        }
+
+        public async Task<SubjectDbDTO> GetSubjectAsync(uint code)
+        {
+            return await context.Subjects.FindAsync(code);
         }
 
         public async Task<SubjectDbDTO> GetSubjectAsync(string name)
@@ -47,9 +50,21 @@ namespace SubjectsAndDistrictsDbContext.Repositories
             return await context.Subjects.FirstOrDefaultAsync(s => s.Name == name);
         }
 
-        public async Task<SubjectDbDTO> GetSubjectAsync(uint code)
+        private IQueryable<SubjectDbDTO> OrderSubjects(string orderBy, bool orderAsc, IQueryable<SubjectDbDTO> subjects)
         {
-            return await context.Subjects.FindAsync(code);
+            switch (orderBy)
+            {
+                case "population":
+                    subjects = SubjectsOrderByPopulation(orderAsc, subjects);
+                    break;
+                case "square":
+                    subjects = SubjectsOrderBySquare(orderAsc, subjects);
+                    break;
+                case "populationDencity":
+                    subjects = SubjectsOrderByPopulationDencity(orderAsc, subjects);
+                    break;
+            }
+            return subjects;
         }
 
         private static IQueryable<SubjectDbDTO> SubjectsOrderByPopulation(bool orderAsc, IQueryable<SubjectDbDTO> subjects)

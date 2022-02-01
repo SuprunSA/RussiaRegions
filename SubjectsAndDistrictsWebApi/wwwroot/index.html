@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns:mso="urn:schemas-microsoft-com:office:office" xmlns:msdt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta lang="ru">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="./js/subjects/subjects.js" type="module"></script>
+
+    <title>Subjects</title>
+</head>
+
+<body>
+
+    <header>
+        <nav class="navbar">
+            <div class="container" id="navbar">
+                <div class="btn-group btn-group-lg">
+                    <a href="./index.html" class="btn btn-secondary active" aria-pressed="true">Субъекты</a>
+                    <a href="../html/indexDistricts.html" class="btn btn-secondary">Округа</a>
+                </div>
+                <div id="user-button" class="justify-content-end">
+                    <a id="login-button" href="./html/login.html" class="btn btn-secondary btn-lg">Вход</a>
+                </div>
+            </div>
+
+        </nav>
+    </header>
+
+    <main>
+        <p></p>
+
+        <div id="subjects-container" class="container">
+
+            <div class="row mb-1">
+                <div class="col-3">
+                    <select id="order-by" class="form-select">
+                            <option value="true">По возрастанию</option>
+                            <option value="false">По убыванию</option>
+                            <option value="none" selected>Сортировка отсутствует</option>
+                        </select>
+                </div>
+                <div class="col-3">
+                    <select id="order-by-what" class="form-select" disabled>
+                            <option value="population" selected>По населению</option>
+                            <option value="square">По площади</option>
+                            <option value="populationDencity">По плотности населения</option>
+                        </select>
+                </div>
+                <div class="col">
+                    <button id="select-accept" class="btn btn-primary mb-2">Применить</button>
+                </div>
+                <div class="text-end col">
+                    <a id="new-subject" class="btn btn-primary mb-2" href="./html/addSubject.html"><i class="bi bi-plus-circle"></i>Новый субъект</a>
+                </div>
+            </div>
+
+            <div class="input-group mb-3">
+                <input id="input-subject-name" type="text" class="form-control" placeholder="Фильтр субъектов по названию">
+                <button class=" btn btn-primary" type="button" id="filter-name">Применить</button>
+            </div>
+
+            <div class="input-group mb-3">
+                <input id="input-subject-district" type="text" class="form-control" placeholder="Фильтр субъектов по округу">
+                <button class=" btn btn-primary" type="button" id="filter-district">Применить</button>
+            </div>
+
+            <div id="show-not-found-after" class="input-group mb-3">
+                <input id="input-search-name" type="text" class="form-control" placeholder="Поиск по названию">
+                <button class=" btn btn-primary" type="button" id="search" disabled>Поиск</button>
+            </div>
+
+        </div>
+        <p></p>
+    </main>
+
+    <template id="template">
+        <div class="card mb-3 text-center">
+            <h5 class="card-header"></h5>
+            <div class="card-body">
+                <div class="card-text">Код ОКАТО: <b></b></div>
+                <div class="card-text">Федеральный округ: <b></b></div>
+                <div class="card-text">Административный центр: <b></b></div>
+                <div class="card-text">Население: <b>, тыс чел</b></div>
+                <div class="card-text">Площадь: <b>, км<sup>2</sup></b></div>
+                <div class="card-text">Плотность населения: <b>, тыс чел / км<sup>2</sup></b></div>
+                <p></p>
+                <p class="border"></p>
+                <button class="btn btn-danger btn-sm"><i class="bi bi-trash-fill "></i>Удалить</button>
+                <a href="../html/editSubject.html" class="btn btn-primary btn-sm "><i class="bi bi-pencil-fill "></i>Редактировать</a>
+            </div>
+        </div>
+    </template>
+
+    <template id="dropdown">
+        <div class="dropdown" id="dropdown-menu">
+            <button class="btn btn-secondary dropdown-toggle btn-lg" type="button" id="dropdownUserMenu" data-bs-toggle="dropdown" aria-expanded="false"></button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownUserMenu">
+                <li><a class="dropdown-item" href="./html/userInfo.html">Редактирование пользователя</a></li>
+                <li><a class="dropdown-item" href="./html/changePassword.html">Смена пароля</a></li>
+                <li><button id="logout" class="dropdown-item">Выход</button></li>
+            </ul>
+          </div>
+    </template>
+
+    <footer class="text-light bg-secondary pt-3 pb-3 text-center ">
+        <div class="container ">
+            &copy;Все права защищены!(нет)
+        </div>
+    </footer>
+</body>
+
+</html>

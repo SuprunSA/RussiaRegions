@@ -18,10 +18,17 @@ namespace SubjectsAndDistrictsWebApi.BL.Services
             this.districtRepository = districtRepository;
         }
 
-        public async Task<IEnumerable<DistrictApiDTO>> GetAllDistrictsAsync(bool orderAsc, string? orderBy)
+        public async Task<IEnumerable<DistrictApiDTO>> GetAllDistrictsAsync(bool orderAsc, string? orderBy, bool order)
         {
-            var districts = await districtRepository.GetAllDistrictsAsync(orderAsc, orderBy);
+            var districts = await districtRepository.GetAllDistrictsAsync(orderAsc, orderBy, order);
             return districts.Select(d => new DistrictApiDTO(d));
+        }
+
+        public async Task<(DistrictApiDTO, Exception)> GetDistrictAsync(string name)
+        {
+            var district = await districtRepository.GetDistrictAsync(name);
+            if (district == null) return (null, new KeyNotFoundException());
+            else return (new DistrictApiDTO(district), null);
         }
 
         public async Task<(DistrictApiDTO, Exception)> GetDistrictAsync(uint code)
@@ -73,10 +80,10 @@ namespace SubjectsAndDistrictsWebApi.BL.Services
             return null;
         }
 
-        public async Task<Exception> UpdateAsync(DistrictApiDTO district)
+        public async Task<Exception> UpdateAsync(uint code, string name)
         {
-            if (!await districtRepository.DistrictExists(district.Code)) return new KeyNotFoundException();
-            districtRepository.Update(district.Create());
+            if (!await districtRepository.DistrictExists(code)) return new KeyNotFoundException();
+            districtRepository.Update(code, name);
 
             try
             {

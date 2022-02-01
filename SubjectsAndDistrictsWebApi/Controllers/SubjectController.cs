@@ -23,15 +23,31 @@ namespace SubjectsAndDistrictsWebApi.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet]
-        public async Task<IEnumerable<SubjectApiDTO>> Get(string? filter, string? orderBy, bool orderAsc)
+        [HttpGet("order")]
+        public async Task<IEnumerable<SubjectApiDTO>> Get(string? filter, string? orderBy, bool orderAsc, bool order)
         {
-            return await subjectService.GetAllSubjectsAsync(filter, orderAsc, orderBy);
+            return await subjectService.GetAllSubjectsAsync(filter, orderAsc, orderBy, order);
+        }
+
+        [AllowAnonymous]
+        [HttpGet("filterDistrict")]
+        public async Task<IEnumerable<SubjectApiDTO>> GetFiltered(string name, string? orderBy, bool orderAsc, bool order)
+        {
+            return await subjectService.GetFilteredSubjects(name, orderBy, orderAsc, order);
+        }
+
+        [AllowAnonymous]
+        [HttpGet("name")]
+        public async Task<ActionResult<SubjectApiDTO>> GetByName(string name)
+        {
+            var subject = await subjectService.GetSubjectAsync(name);
+            if (subject == null) return StatusCode(404, string.Format("Субъекта с именем {0} не найдено", name));
+            else return Ok(subject);
         }
 
         [AllowAnonymous]
         [HttpGet("{code}")]
-        public async Task<ActionResult<SubjectApiDTO>> Get(uint code)
+        public async Task<ActionResult<SubjectApiDTO>> GetByCode(uint code)
         {
             var subject = await subjectService.GetSubjectAsync(code);
             if (subject == null) return StatusCode(404, string.Format("Субъекта с кодом {0} не найдено", code));
@@ -39,7 +55,7 @@ namespace SubjectsAndDistrictsWebApi.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult<Exception>> Put([FromForm] SubjectApiDTO subject)
+        public async Task<ActionResult<Exception>> Put([FromBody] SubjectApiDTO subject)
         {
             var ex = await subjectService.UpdateAsync(subject);
             if (ex != null)
@@ -52,7 +68,7 @@ namespace SubjectsAndDistrictsWebApi.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Exception>> Post([FromForm] SubjectApiDTO subject)
+        public async Task<ActionResult<Exception>> Post([FromBody] SubjectApiDTO subject)
         {
             var ex = await subjectService.CreateAsync(subject);
             if (ex != null)
@@ -65,7 +81,7 @@ namespace SubjectsAndDistrictsWebApi.Controllers
         }
 
         [HttpDelete]
-        public async Task<ActionResult<Exception>> Delete([FromForm] SubjectApiDTO subject)
+        public async Task<ActionResult<Exception>> Delete([FromBody] SubjectApiDTO subject)
         {
             var ex = await subjectService.DeleteAsync(subject.Create());
             if (ex != null)
@@ -74,7 +90,7 @@ namespace SubjectsAndDistrictsWebApi.Controllers
                 if (ex is SaveChangesException) return StatusCode(500, ex.Message);
                 return StatusCode(400, ex.Message);
             }
-            return StatusCode(410);
+            return StatusCode(200);
         }
 
         [HttpDelete("{code}")]
@@ -87,7 +103,7 @@ namespace SubjectsAndDistrictsWebApi.Controllers
                 if (ex is SaveChangesException) return StatusCode(500, ex.Message);
                 return StatusCode(400, ex.Message);
             }
-            return StatusCode(410);
+            return StatusCode(200);
         }
     }
 }

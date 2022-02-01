@@ -26,7 +26,7 @@ namespace SubjectsAndDistrictsWebApi.BL.Auth
             claims.Add(new Claim("FirstName", userDB.FirstName ?? ""));
             claims.Add(new Claim("MiddleName", userDB.MiddleName ?? ""));
             claims.Add(new Claim("LastName", userDB.LastName ?? ""));
-            claims.Add(new Claim(ClaimTypes.Role, string.Join(",", await UserManager.GetRolesAsync(userDB))));
+            claims.Add(new Claim(ClaimTypes.Role, string.Join(",", await UserManager.GetRolesAsync(userDB)) ?? ""));
 
             identity.AddClaims(claims);
             return principal;

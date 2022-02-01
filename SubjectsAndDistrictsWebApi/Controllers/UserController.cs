@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using SubjectsAndDistrictsDbContext.Model.DTO;
 using SubjectsAndDistrictsWebApi.BL.Exceptions;
 using SubjectsAndDistrictsWebApi.BL.Model;
 using SubjectsAndDistrictsWebApi.BL.Services;
@@ -16,10 +18,12 @@ namespace SubjectsAndDistrictsWebApi.Controllers
     public class UserController : ControllerBase
     {
         private readonly UserService userService;
+        private readonly SignInManager<UserDbDTO> signInManager;
 
-        public UserController(UserService userService)
+        public UserController(UserService userService, SignInManager<UserDbDTO> signInManager)
         {
             this.userService = userService;
+            this.signInManager = signInManager;
         }
 
         [HttpGet]
@@ -50,8 +54,8 @@ namespace SubjectsAndDistrictsWebApi.Controllers
             return StatusCode(200);
         }
 
-        [HttpPost("role/{userName}")]
-        public async Task<ActionResult<Exception>> PostRoleToUser(string userName, string role)
+        [HttpPost("role/{role}/{userName}")]
+        public async Task<ActionResult<Exception>> PostRoleToUser(string role, string userName)
         {
             var ex = await userService.AddToRole(userName, role);
             if (ex != null)
@@ -64,7 +68,7 @@ namespace SubjectsAndDistrictsWebApi.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult<Exception>> Put([FromBody] UserApiDTOCreate user)
+        public async Task<ActionResult<Exception>> Put([FromBody] UserApiDTO user)
         {
             var ex = await userService.UpdateProfile(user);
             if (ex != null)
@@ -73,6 +77,8 @@ namespace SubjectsAndDistrictsWebApi.Controllers
                 if (ex is SaveChangesException) return StatusCode(500, ex.Message);
                 return StatusCode(400, ex.Message);
             }
+            var profile = await signInManager.UserManager.GetUserAsync(HttpContext.User);
+            await signInManager.RefreshSignInAsync(profile);
             return StatusCode(200);
         }
 
@@ -89,7 +95,7 @@ namespace SubjectsAndDistrictsWebApi.Controllers
             return StatusCode(200);
         }
 
-        [HttpDelete("role/{userName}")]
+        [HttpDelete("role/{role}/{userName}")]
         public async Task<ActionResult<Exception>> DeleteRoleFromUser(string userName, string role)
         {
             var ex = await userService.RemoveRole(userName, role);

@@ -24,14 +24,27 @@ namespace SubjectsAndDistrictsWebApi.Controllers
 
         [AllowAnonymous]
         [HttpGet]
-        public async Task<IEnumerable<DistrictApiDTO>> Get(string? orderBy, bool orderAsc = true)
+        public async Task<IEnumerable<DistrictApiDTO>> Get(string? orderBy, bool orderAsc, bool order)
         {
-            return await districtService.GetAllDistrictsAsync(orderAsc, orderBy);
+            return await districtService.GetAllDistrictsAsync(orderAsc, orderBy, order);
+        }
+
+        [AllowAnonymous]
+        [HttpGet("name/{name}")]
+        public async Task<ActionResult<DistrictApiDTO>> GetByName(string name)
+        {
+            (var district, var ex) = await districtService.GetDistrictAsync(name);
+            if (ex != null)
+            {
+                if (ex is KeyNotFoundException) return StatusCode(404, string.Format("Округа с именем {0} не найдено", name));
+                else return StatusCode(500, ex);
+            }
+            return StatusCode(200, district);
         }
 
         [AllowAnonymous]
         [HttpGet("{code}")]
-        public async Task<ActionResult<DistrictApiDTO>> Get(uint code)
+        public async Task<ActionResult<DistrictApiDTO>> GetByCode(uint code)
         {
             (var district, var ex) = await districtService.GetDistrictAsync(code);
             if (ex != null)
@@ -43,12 +56,12 @@ namespace SubjectsAndDistrictsWebApi.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult> Put([FromForm] DistrictApiDTO district)
+        public async Task<ActionResult> Put(uint code, string name)
         {
-            var ex = await districtService.UpdateAsync(district);
+            var ex = await districtService.UpdateAsync(code , name);
             if (ex != null)
             {
-                if (ex is KeyNotFoundException) return StatusCode(404, string.Format("Округ с кодом {0} не найден", district.Code));
+                if (ex is KeyNotFoundException) return StatusCode(404, string.Format("Округ с кодом {0} не найден", code));
                 if (ex is SaveChangesException) return StatusCode(500, ex.Message);
                 return StatusCode(400, ex.Message);
             }
@@ -56,7 +69,7 @@ namespace SubjectsAndDistrictsWebApi.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Post([FromForm] DistrictApiDTO district)
+        public async Task<ActionResult> Post([FromBody] DistrictApiDTO district)
         {
             var ex = await districtService.CreateAsync(district);
             if (ex != null)
@@ -69,7 +82,7 @@ namespace SubjectsAndDistrictsWebApi.Controllers
         }
 
         [HttpDelete]
-        public async Task<ActionResult> Delete([FromForm] DistrictApiDTO district)
+        public async Task<ActionResult> Delete([FromBody] DistrictApiDTO district)
         {
             var ex = await districtService.DeleteAsync(district.Create());
             if (ex != null)
@@ -78,7 +91,7 @@ namespace SubjectsAndDistrictsWebApi.Controllers
                 if (ex is SaveChangesException) return StatusCode(500, ex.Message);
                 return StatusCode(400, ex.Message);
             }
-            return StatusCode(410);
+            return StatusCode(200);
         }
 
         [HttpDelete("{code}")]
@@ -91,7 +104,7 @@ namespace SubjectsAndDistrictsWebApi.Controllers
                 if (ex is SaveChangesException) return StatusCode(500, ex.Message);
                 return StatusCode(400, ex.Message);
             }
-            return StatusCode(410);
+            return StatusCode(200);
         }
     }
 }

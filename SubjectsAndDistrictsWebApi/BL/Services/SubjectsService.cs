@@ -18,10 +18,23 @@ namespace SubjectsAndDistrictsWebApi.BL.Services
             this.subjectRepository = subjectRepository;
         }
 
-        public async Task<IEnumerable<SubjectApiDTO>> GetAllSubjectsAsync(string? filter, bool orderAsc, string? orderBy)
+        public async Task<IEnumerable<SubjectApiDTO>> GetAllSubjectsAsync(string? filter, bool orderAsc, string? orderBy, bool order)
         {
-            var subjects = await subjectRepository.GetAllSubjectsAsync(filter, orderAsc, orderBy);
+            var subjects = await subjectRepository.GetAllSubjectsAsync(filter, orderAsc, orderBy, order);
             return subjects.Select(s => new SubjectApiDTO(s));
+        }
+
+        public async Task<IEnumerable<SubjectApiDTO>> GetFilteredSubjects(string name, string? orderBy, bool orderAsc, bool order) 
+        {
+            var subjects = await subjectRepository.FilterSubjectsAsync(name, orderBy, orderAsc, order);
+            return subjects.Select(s => new SubjectApiDTO(s));
+        }
+
+        public async Task<SubjectApiDTO> GetSubjectAsync(string name)
+        {
+            var subject = await subjectRepository.GetSubjectAsync(name);
+            if (subject == null) return null;
+            else return new SubjectApiDTO(subject);
         }
 
         public async Task<SubjectApiDTO> GetSubjectAsync(uint code)
@@ -53,8 +66,16 @@ namespace SubjectsAndDistrictsWebApi.BL.Services
         {
             var subject = await subjectRepository.GetSubjectAsync(code);
             if (subject == null) return new KeyNotFoundException();
-
-            return await DeleteAsync(subject);
+            subjectRepository.Delete(subject);
+            try
+            {
+                await subjectRepository.SaveAsync();
+            }
+            catch (Exception)
+            {
+                return new SaveChangesException();
+            }
+            return null;
         }
 
         public async Task<Exception> DeleteAsync(SubjectDbDTO subject)

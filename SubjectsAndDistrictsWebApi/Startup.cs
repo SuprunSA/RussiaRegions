@@ -56,6 +56,15 @@ namespace SubjectsAndDistrictsWebApi
 
             services.AddControllers();
 
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(
+                    builder =>
+                    {
+                        builder.AllowAnyOrigin();
+                    });
+            });
+
             services.AddSwaggerGen(s =>
             {
                 s.SwaggerDoc("v1", new OpenApiInfo { Title = "SND API" });
@@ -71,19 +80,23 @@ namespace SubjectsAndDistrictsWebApi
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                /*app.UseSwagger();
+                app.UseSwaggerUI(s =>
+                {
+                    s.SwaggerEndpoint("/swagger/v1/swagger.json", "SND API V1");
+                    s.RoutePrefix = string.Empty;
+                });*/
             }
 
-            app.UseSwagger();
-
-            app.UseSwaggerUI(s =>
-            {
-                s.SwaggerEndpoint("/swagger/v1/swagger.json", "SND API V1");
-                s.RoutePrefix = string.Empty;
-            });
+            app.UseCors();
 
             app.UseHttpsRedirection();
 
+            app.UseCors();
             app.UseRouting();
+
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
 
             app.UseAuthentication();
             app.UseAuthorization();
