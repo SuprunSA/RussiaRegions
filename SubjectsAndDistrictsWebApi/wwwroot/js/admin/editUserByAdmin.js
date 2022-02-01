@@ -5,6 +5,7 @@ window.addEventListener('load', () => {
     render();
     let form = document.getElementById('edit-user-form');
     let path = 'user/' + new URLSearchParams(location.search).get('userName');
+
     apiMethods.get(path)
         .then((result) => {
             form[0].value = result.userName;

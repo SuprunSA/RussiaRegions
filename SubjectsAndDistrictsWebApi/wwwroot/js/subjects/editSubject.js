@@ -38,7 +38,10 @@ function fillForm(subject) {
                 square: +form[4].value,
                 districtId: +form[5].value
             })
-            .then(() => location.pathname = 'index.html')
+            .then(() => {
+                location.pathname = 'index.html';
+                console.log('успешно обновлён')
+            })
             .catch(error => console.warn(error));
     });
 }

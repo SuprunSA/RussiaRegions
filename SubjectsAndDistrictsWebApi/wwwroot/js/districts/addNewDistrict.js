@@ -15,7 +15,7 @@ window.addEventListener('load', () => {
             })
             .then(() => {
                 location.pathname = '/html/indexDistricts.html';
-                console.log('задание успешно провалено');
+                console.log('успешно добавлен');
             })
             .catch(error => console.warn(error));
     });

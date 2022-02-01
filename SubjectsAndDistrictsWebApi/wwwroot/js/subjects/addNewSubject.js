@@ -49,7 +49,8 @@ const addListeners = {
                     districtId: +form[5].value
                 })
                 .then(() => {
-                    console.log('задание успешно провалено');
+                    location.pathname = 'index.html';
+                    console.log('успешно добавлен');
                 })
                 .catch((error) => {
                     console.warn(error);
