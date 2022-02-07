@@ -112,7 +112,7 @@ namespace SubjectsAndDistrictsWebApi.BL.Services
             {
                 var result = await userManager.RemoveFromRoleAsync(user, role);
                 if (result.Succeeded) return null;
-                else return new UserRoleException(string.Format("Не удалось назначить пользователю {0} роль {1}", userName, role));
+                else return new UserRoleException(string.Format("Не удалось удалить пользователю {0} роль {1}", userName, role));
             }
         }
         #endregion

@@ -13,6 +13,14 @@ window.addEventListener('load', () => {
             form[2].value = result.firstName;
             form[3].value = result.middleName;
             form[4].value = result.lastName;
+            if (contains(result.roles, 'Admin')) {
+                form[5].value = 'Admin';
+            };
+
+            let dropdown = document.getElementById('dropdownUserMenu');
+            if (result.userName === dropdown.value) {
+                form[5].setAttribute('disabled', undefined);
+            }
         })
         .catch(error => console.log(error));
 
@@ -21,9 +29,16 @@ window.addEventListener('load', () => {
 
         let role = form[5].value;
         if (role !== 'none') {
-            apiMethods.post('user/role/' + role + '/' + form[0].value)
+            apiMethods.post('user/role/' + role + '/' + form[0].value, undefined)
                 .then(() => console.log('успешно добавлена роль'))
                 .catch(error => console.warn(error));
+        } else {
+            let deleteRolePath = 'user/role/Admin/' + form[0].value;
+            apiMethods.delete(deleteRolePath)
+                .then(() => console.log('роль успешно удалена'))
+                .catch((error) => {
+                    console.warn(error);
+                });
         }
 
         apiMethods.put('user', {

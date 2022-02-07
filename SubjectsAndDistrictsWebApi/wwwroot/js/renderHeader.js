@@ -11,6 +11,9 @@ export function render() {
 
             navbar.append(dropdownTemplate.content.cloneNode(true));
             let dropdown = document.getElementById('dropdownUserMenu');
+
+            dropdown.setAttribute('value', result.userName);
+
             let userIcon = document.createElement('i');
             userIcon.classList.add('bi');
             userIcon.classList.add('bi-person-check');

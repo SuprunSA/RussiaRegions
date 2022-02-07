@@ -33,4 +33,22 @@ window.addEventListener('load', () => {
                 console.warn(error);
             });
     });
+
+    let showPassword = document.getElementById('show-password');
+    showPassword.addEventListener('click', (evt) => {
+        evt.preventDefault();
+
+        let password = document.getElementById('password');
+        let acceptPassword = document.getElementById('accept-password');
+
+        if (showPassword.innerText === 'Показать пароль') {
+            showPassword.innerText = 'Скрыть пароль';
+            password.setAttribute('type', 'text');
+            acceptPassword.setAttribute('type', 'text');
+        } else {
+            showPassword.innerText = 'Показать пароль';
+            password.setAttribute('type', 'password');
+            acceptPassword.setAttribute('type', 'password');
+        }
+    })
 });
