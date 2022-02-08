@@ -28,30 +28,29 @@ window.addEventListener('load', () => {
         evt.preventDefault();
 
         let role = form[5].value;
+        let updateRole = undefined;
         if (role !== 'none') {
-            apiMethods.post('user/role/' + role + '/' + form[0].value, undefined)
-                .then(() => console.log('успешно добавлена роль'))
-                .catch(error => console.warn(error));
+            updateRole = apiMethods.post('user/role/' + role + '/' + form[0].value, undefined);
         } else {
             let deleteRolePath = 'user/role/Admin/' + form[0].value;
-            apiMethods.delete(deleteRolePath)
-                .then(() => console.log('роль успешно удалена'))
-                .catch((error) => {
-                    console.warn(error);
-                });
+            updateRole = apiMethods.delete(deleteRolePath);
         }
 
-        apiMethods.put('user', {
-                userName: form[0].value,
-                email: form[1].value,
-                firstName: form[2].value,
-                middleName: form[3].value,
-                lastName: form[4].value
-            })
+        const updateUser = apiMethods.put('user', {
+            userName: form[0].value,
+            email: form[1].value,
+            firstName: form[2].value,
+            middleName: form[3].value,
+            lastName: form[4].value
+        });
+
+        Promise.all([updateUser, updateRole])
             .then(() => {
                 location.pathname = 'html/adminOpp.html';
                 console.log('успешно обновлён');
             })
-            .catch(error => console.log(error));
+            .catch((error) => {
+                console.warn(error);
+            });
     });
 });

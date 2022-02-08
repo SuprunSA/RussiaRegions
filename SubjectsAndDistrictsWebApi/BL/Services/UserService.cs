@@ -96,24 +96,26 @@ namespace SubjectsAndDistrictsWebApi.BL.Services
         {
             var user = await userManager.FindByNameAsync(userName);
             if (user == null) return new KeyNotFoundException(string.Format("Пользователь с именем {0} не найден", userName));
-            else
+            else if (!await userManager.IsInRoleAsync(user, role))
             {
                 var result = await userManager.AddToRoleAsync(user, role);
                 if (result.Succeeded) return null;
                 else return new UserRoleException(string.Format("Не удалось назначить пользователю {0} роль {1}", userName, role));
             }
+            else return null;
         }
 
         public async Task<Exception> RemoveRole(string userName, string role)
         {
             var user = await userManager.FindByNameAsync(userName);
             if (user == null) return new KeyNotFoundException(string.Format("Пользователь с именем {0} не найден", userName));
-            else
+            else if (await userManager.IsInRoleAsync(user, role))
             {
                 var result = await userManager.RemoveFromRoleAsync(user, role);
                 if (result.Succeeded) return null;
                 else return new UserRoleException(string.Format("Не удалось удалить пользователю {0} роль {1}", userName, role));
             }
+            else return null;
         }
         #endregion
     }
